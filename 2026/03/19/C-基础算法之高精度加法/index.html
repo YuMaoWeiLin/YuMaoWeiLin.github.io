@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="zh-CN" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>C++基础算法之高精度加法 | 与猫为邻的小站</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.ttf");
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":15,"search":{"preload":false,"activeHolder":"键入以继续","blurHolder":"数据检索","noResult":"无 $0 相关数据"},"code":{"codeInfo":"$0 - $1 行","copy":"复制"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: '确认'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/links/"><span class="navItemTitle">Link</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>C++基础算法之高精度加法</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2026-03-19T13:00:00.000Z" id="date"> 2026-03-19</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2026-03-19T13:03:34.692Z" id="updated"> 2026-03-19</time></div></span></div></div><hr><div id="post-content"><p>在 C++ 中，普通整数类型如 <code>int</code>、<code>long long</code> 都有范围限制。<br>当数字特别大时，就不能直接用普通变量存储，这时就要用到<strong>高精度算法</strong>。</p>
+<p>高精度加法就是：<strong>模拟我们平时列竖式加法的过程，按位相加并处理进位。</strong></p>
+<h2 id="一、基本思路"><a href="#一、基本思路" class="headerlink" title="一、基本思路"></a>一、基本思路</h2><p>假设我们要计算两个特别大的整数之和，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">123456789123456789 + 987654321987654321<br></code></pre></td></tr></table></figure>
+
+<p>这种数字已经超出了普通整型范围，所以我们要把它们当成字符串处理。</p>
+<p>高精度加法的核心思想是：</p>
+<ol>
+<li>用字符串读入两个大整数</li>
+<li>从个位开始向前逐位相加</li>
+<li>记录每一位的结果</li>
+<li>处理进位</li>
+<li>最后逆序输出结果</li>
+</ol>
+<h2 id="二、为什么要倒着存"><a href="#二、为什么要倒着存" class="headerlink" title="二、为什么要倒着存"></a>二、为什么要倒着存</h2><p>因为加法是从个位开始算的。<br>例如数字 <code>12345</code>，个位是 <code>5</code>，十位是 <code>4</code>。</p>
+<p>为了方便计算，通常把每一位数字倒着存到数组中：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">12345<br></code></pre></td></tr></table></figure>
+
+<p>倒着存后变成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">5 4 3 2 1<br></code></pre></td></tr></table></figure>
+
+<p>这样下标从小到大，刚好对应从个位到高位，处理起来更自然。</p>
+<h2 id="三、算法步骤"><a href="#三、算法步骤" class="headerlink" title="三、算法步骤"></a>三、算法步骤</h2><p>以 <code>999 + 1</code> 为例：</p>
+<ol>
+<li>个位：<code>9 + 1 = 10</code>，写 <code>0</code>，进 <code>1</code></li>
+<li>十位：<code>9 + 0 + 1 = 10</code>，写 <code>0</code>，进 <code>1</code></li>
+<li>百位：<code>9 + 0 + 1 = 10</code>，写 <code>0</code>，进 <code>1</code></li>
+<li>最后最高位还有一个进位 <code>1</code></li>
+</ol>
+<p>结果就是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">1000<br></code></pre></td></tr></table></figure>
+
+<h2 id="四、代码实现"><a href="#四、代码实现" class="headerlink" title="四、代码实现"></a>四、代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    string a, b;<br>    cin &gt;&gt; a &gt;&gt; b;<br><br>    <span class="hljs-type">int</span> A[<span class="hljs-number">1005</span>] = &#123;<span class="hljs-number">0</span>&#125;, B[<span class="hljs-number">1005</span>] = &#123;<span class="hljs-number">0</span>&#125;, C[<span class="hljs-number">1005</span>] = &#123;<span class="hljs-number">0</span>&#125;;<br><br>    <span class="hljs-type">int</span> lenA = a.<span class="hljs-built_in">size</span>();<br>    <span class="hljs-type">int</span> lenB = b.<span class="hljs-built_in">size</span>();<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; lenA; i++) &#123;<br>        A[i] = a[lenA - <span class="hljs-number">1</span> - i] - <span class="hljs-string">&#x27;0&#x27;</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; lenB; i++) &#123;<br>        B[i] = b[lenB - <span class="hljs-number">1</span> - i] - <span class="hljs-string">&#x27;0&#x27;</span>;<br>    &#125;<br><br>    <span class="hljs-type">int</span> lenC = <span class="hljs-built_in">max</span>(lenA, lenB);<br>    <span class="hljs-type">int</span> carry = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; lenC; i++) &#123;<br>        C[i] = A[i] + B[i] + carry;<br>        carry = C[i] / <span class="hljs-number">10</span>;<br>        C[i] %= <span class="hljs-number">10</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (carry) &#123;<br>        C[lenC] = carry;<br>        lenC++;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = lenC - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;<br>        cout &lt;&lt; C[i];<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="五、代码讲解"><a href="#五、代码讲解" class="headerlink" title="五、代码讲解"></a>五、代码讲解</h2><h3 id="1-输入部分"><a href="#1-输入部分" class="headerlink" title="1. 输入部分"></a>1. 输入部分</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp">string a, b;<br>cin &gt;&gt; a &gt;&gt; b;<br></code></pre></td></tr></table></figure>
+
+<p>这里用字符串输入，是因为数字太大，不能直接用 <code>int</code> 或 <code>long long</code>。</p>
+<h3 id="2-倒序存入数组"><a href="#2-倒序存入数组" class="headerlink" title="2. 倒序存入数组"></a>2. 倒序存入数组</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp">A[i] = a[lenA - <span class="hljs-number">1</span> - i] - <span class="hljs-string">&#x27;0&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p>作用是把字符 <code>&#39;5&#39;</code> 转成数字 <code>5</code>，并且从个位开始存。</p>
+<h3 id="3-逐位相加"><a href="#3-逐位相加" class="headerlink" title="3. 逐位相加"></a>3. 逐位相加</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp">C[i] = A[i] + B[i] + carry;<br>carry = C[i] / <span class="hljs-number">10</span>;<br>C[i] %= <span class="hljs-number">10</span>;<br></code></pre></td></tr></table></figure>
+
+<p>这几句就是模拟竖式加法：</p>
+<ul>
+<li>当前位相加</li>
+<li>超过 10 就进位</li>
+<li>当前位只保留个位数</li>
+</ul>
+<h3 id="4-输出结果"><a href="#4-输出结果" class="headerlink" title="4. 输出结果"></a>4. 输出结果</h3><p>由于数组里是倒着存的，所以最后要倒着输出。</p>
+<h2 id="六、样例"><a href="#六、样例" class="headerlink" title="六、样例"></a>六、样例</h2><p>输入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">123456789123456789<br>987654321987654321<br></code></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">1111111111111111110<br></code></pre></td></tr></table></figure><div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2026/03/19/C-%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E4%B9%8B%E9%AB%98%E7%B2%BE%E5%BA%A6%E4%B9%98%E6%B3%95/">← 下一篇 C++基础算法之高精度乘法</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/03/19/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B/">贪心算法简介 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">Tubey</a></h1><div id="description"><p></p></div><div id="social-links"><a class="social" target="_blank" rel="noopener" href="https://github.com/YuMaoWeiLin"><i class="fab fa-github" alt="GitHub"></i></a></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">一、基本思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%80%92%E7%9D%80%E5%AD%98"><span class="toc-number">2.</span> <span class="toc-text">二、为什么要倒着存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%AE%97%E6%B3%95%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.</span> <span class="toc-text">三、算法步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">四、代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3"><span class="toc-number">5.</span> <span class="toc-text">五、代码讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%BE%93%E5%85%A5%E9%83%A8%E5%88%86"><span class="toc-number">5.1.</span> <span class="toc-text">1. 输入部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%80%92%E5%BA%8F%E5%AD%98%E5%85%A5%E6%95%B0%E7%BB%84"><span class="toc-number">5.2.</span> <span class="toc-text">2. 倒序存入数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%80%90%E4%BD%8D%E7%9B%B8%E5%8A%A0"><span class="toc-number">5.3.</span> <span class="toc-text">3. 逐位相加</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C"><span class="toc-number">5.4.</span> <span class="toc-text">4. 输出结果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%A0%B7%E4%BE%8B"><span class="toc-number">6.</span> <span class="toc-text">六、样例</span></a></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas></body></html>

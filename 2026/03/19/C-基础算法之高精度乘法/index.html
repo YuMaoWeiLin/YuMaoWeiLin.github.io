@@ -1,0 +1,133 @@
+<!DOCTYPE html><html lang="zh-CN" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>C++基础算法之高精度乘法 | 与猫为邻的小站</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.ttf");
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":15,"search":{"preload":false,"activeHolder":"键入以继续","blurHolder":"数据检索","noResult":"无 $0 相关数据"},"code":{"codeInfo":"$0 - $1 行","copy":"复制"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: '确认'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/links/"><span class="navItemTitle">Link</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>C++基础算法之高精度乘法</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2026-03-19T13:10:00.000Z" id="date"> 2026-03-19</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2026-03-19T13:04:17.703Z" id="updated"> 2026-03-19</time></div></span></div></div><hr><div id="post-content"><p>高精度乘法用于解决“大整数相乘”的问题。<br>因为普通整数类型有范围限制，当两个数特别大时，必须使用字符串和数组来模拟乘法过程。</p>
+<p>高精度乘法的本质就是：<strong>模拟竖式乘法。</strong></p>
+<h2 id="一、基本思路"><a href="#一、基本思路" class="headerlink" title="一、基本思路"></a>一、基本思路</h2><p>例如我们要计算：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">123 × 45<br></code></pre></td></tr></table></figure>
+
+<p>手算时我们会：</p>
+<ol>
+<li>用 <code>5</code> 去乘 <code>123</code></li>
+<li>再用 <code>4</code> 去乘 <code>123</code>，注意位置左移一位</li>
+<li>把两部分加起来</li>
+</ol>
+<p>高精度乘法也是同样的思想，只不过我们用数组来实现。</p>
+<h2 id="二、为什么仍然要倒着存"><a href="#二、为什么仍然要倒着存" class="headerlink" title="二、为什么仍然要倒着存"></a>二、为什么仍然要倒着存</h2><p>和高精度加法一样，乘法计算时也更适合从个位开始。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">123<br></code></pre></td></tr></table></figure>
+
+<p>倒着存成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">3 2 1<br></code></pre></td></tr></table></figure>
+
+<p>这样数组下标越小，位数越低，方便处理。</p>
+<h2 id="三、算法原理"><a href="#三、算法原理" class="headerlink" title="三、算法原理"></a>三、算法原理</h2><p>假设两个数分别是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">a = 123<br>b = 45<br></code></pre></td></tr></table></figure>
+
+<p>如果倒着存：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">a: 3 2 1<br>b: 5 4<br></code></pre></td></tr></table></figure>
+
+<p>那么：</p>
+<ul>
+<li><code>a[0] * b[0]</code> 对应个位</li>
+<li><code>a[0] * b[1]</code> 和 <code>a[1] * b[0]</code> 对应十位</li>
+<li><code>a[1] * b[1]</code> 和 <code>a[2] * b[0]</code> 对应更高位</li>
+</ul>
+<p>因此可以发现：</p>
+<p><strong>第 <code>i</code> 位和第 <code>j</code> 位相乘，结果要加到第 <code>i + j</code> 位上。</strong></p>
+<p>这就是高精度乘法最关键的地方。</p>
+<h2 id="四、代码实现"><a href="#四、代码实现" class="headerlink" title="四、代码实现"></a>四、代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    string a, b;<br>    cin &gt;&gt; a &gt;&gt; b;<br><br>    <span class="hljs-type">int</span> A[<span class="hljs-number">1005</span>] = &#123;<span class="hljs-number">0</span>&#125;, B[<span class="hljs-number">1005</span>] = &#123;<span class="hljs-number">0</span>&#125;, C[<span class="hljs-number">2005</span>] = &#123;<span class="hljs-number">0</span>&#125;;<br><br>    <span class="hljs-type">int</span> lenA = a.<span class="hljs-built_in">size</span>();<br>    <span class="hljs-type">int</span> lenB = b.<span class="hljs-built_in">size</span>();<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; lenA; i++) &#123;<br>        A[i] = a[lenA - <span class="hljs-number">1</span> - i] - <span class="hljs-string">&#x27;0&#x27;</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; lenB; i++) &#123;<br>        B[i] = b[lenB - <span class="hljs-number">1</span> - i] - <span class="hljs-string">&#x27;0&#x27;</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; lenA; i++) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; lenB; j++) &#123;<br>            C[i + j] += A[i] * B[j];<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; lenA + lenB; i++) &#123;<br>        C[i + <span class="hljs-number">1</span>] += C[i] / <span class="hljs-number">10</span>;<br>        C[i] %= <span class="hljs-number">10</span>;<br>    &#125;<br><br>    <span class="hljs-type">int</span> lenC = lenA + lenB;<br>    <span class="hljs-keyword">while</span> (lenC &gt; <span class="hljs-number">1</span> &amp;&amp; C[lenC - <span class="hljs-number">1</span>] == <span class="hljs-number">0</span>) &#123;<br>        lenC--;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = lenC - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;<br>        cout &lt;&lt; C[i];<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="五、代码讲解"><a href="#五、代码讲解" class="headerlink" title="五、代码讲解"></a>五、代码讲解</h2><h3 id="1-两层循环相乘"><a href="#1-两层循环相乘" class="headerlink" title="1. 两层循环相乘"></a>1. 两层循环相乘</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; lenA; i++) &#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; lenB; j++) &#123;<br>        C[i + j] += A[i] * B[j];<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这是核心部分。</p>
+<p>它表示：</p>
+<ul>
+<li>第 <code>i</code> 位乘第 <code>j</code> 位</li>
+<li>结果累加到 <code>C[i + j]</code></li>
+</ul>
+<p>这和竖式乘法的位数对齐是一样的。</p>
+<h3 id="2-统一处理进位"><a href="#2-统一处理进位" class="headerlink" title="2. 统一处理进位"></a>2. 统一处理进位</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; lenA + lenB; i++) &#123;<br>    C[i + <span class="hljs-number">1</span>] += C[i] / <span class="hljs-number">10</span>;<br>    C[i] %= <span class="hljs-number">10</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>因为前面每一位可能会积累很多数，所以最后要统一进位。</p>
+<h3 id="3-去掉前导零"><a href="#3-去掉前导零" class="headerlink" title="3. 去掉前导零"></a>3. 去掉前导零</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">while</span> (lenC &gt; <span class="hljs-number">1</span> &amp;&amp; C[lenC - <span class="hljs-number">1</span>] == <span class="hljs-number">0</span>) &#123;<br>    lenC--;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>例如 <code>00123</code> 这种形式，前面的 0 没有意义，要去掉。</p>
+<h2 id="六、样例"><a href="#六、样例" class="headerlink" title="六、样例"></a>六、样例</h2><p>输入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">12345<br>6789<br></code></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">83810205<br></code></pre></td></tr></table></figure>
+
+<h2 id="七、特别注意"><a href="#七、特别注意" class="headerlink" title="七、特别注意"></a>七、特别注意</h2><p>如果其中一个数是 <code>0</code>，结果应该也是 <code>0</code>。<br>上面的代码已经能正确处理这种情况。</p>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2026/03/19/C-%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E4%B9%8B%E9%AB%98%E7%B2%BE%E5%BA%A6%E9%99%A4%E6%B3%95/">← 下一篇 C++基础算法之高精度除法</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/03/19/C-%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E4%B9%8B%E9%AB%98%E7%B2%BE%E5%BA%A6%E5%8A%A0%E6%B3%95/">C++基础算法之高精度加法 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">Tubey</a></h1><div id="description"><p></p></div><div id="social-links"><a class="social" target="_blank" rel="noopener" href="https://github.com/YuMaoWeiLin"><i class="fab fa-github" alt="GitHub"></i></a></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">一、基本思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BB%8D%E7%84%B6%E8%A6%81%E5%80%92%E7%9D%80%E5%AD%98"><span class="toc-number">2.</span> <span class="toc-text">二、为什么仍然要倒着存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">三、算法原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">四、代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3"><span class="toc-number">5.</span> <span class="toc-text">五、代码讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%A4%E5%B1%82%E5%BE%AA%E7%8E%AF%E7%9B%B8%E4%B9%98"><span class="toc-number">5.1.</span> <span class="toc-text">1. 两层循环相乘</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%BB%9F%E4%B8%80%E5%A4%84%E7%90%86%E8%BF%9B%E4%BD%8D"><span class="toc-number">5.2.</span> <span class="toc-text">2. 统一处理进位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%8E%BB%E6%8E%89%E5%89%8D%E5%AF%BC%E9%9B%B6"><span class="toc-number">5.3.</span> <span class="toc-text">3. 去掉前导零</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%A0%B7%E4%BE%8B"><span class="toc-number">6.</span> <span class="toc-text">六、样例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E7%89%B9%E5%88%AB%E6%B3%A8%E6%84%8F"><span class="toc-number">7.</span> <span class="toc-text">七、特别注意</span></a></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas></body></html>
