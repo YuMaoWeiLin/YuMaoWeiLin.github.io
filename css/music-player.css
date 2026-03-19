@@ -1,0 +1,78 @@
+#music-float-btn {
+    position: fixed;
+    right: 24px;
+    bottom: 90px;
+    width: 52px;
+    height: 52px;
+    border: none;
+    border-radius: 50%;
+    background: #1f2a33;
+    color: #ffffff;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.35);
+    transition: all 0.2s ease;
+}
+
+    #music-float-btn:hover {
+        transform: scale(1.08);
+    }
+
+#music-panel {
+    position: fixed;
+    right: 24px;
+    bottom: 155px;
+    width: 340px;
+    height: 430px;
+    background: rgba(10, 15, 20, 0.96);
+    border: 1px solid #2ec5ff;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.45);
+    z-index: 9998;
+    overflow: hidden;
+}
+
+    #music-panel.hidden {
+        display: none;
+    }
+
+#music-panel-header {
+    height: 42px;
+    line-height: 42px;
+    padding: 0 14px;
+    font-size: 14px;
+    color: #2ec5ff;
+    border-bottom: 1px solid rgba(46, 197, 255, 0.35);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#music-panel-close {
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#music-panel iframe {
+    width: 100%;
+    height: calc(100% - 42px);
+    border: none;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    #music-panel {
+        right: 12px;
+        bottom: 140px;
+        width: calc(100vw - 24px);
+        max-width: 340px;
+    }
+
+    #music-float-btn {
+        right: 12px;
+        bottom: 80px;
+    }
+}
