@@ -1,0 +1,150 @@
+<!DOCTYPE html><html lang="en" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>数论与算法应用之质数性质与基础质数筛 | 与猫为邻的小站</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.ttf");
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":15,"search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><style defer src="/css/music-player.css"></style><link rel="stylesheet" href="/css/music-player.css"><style defer src="/css/waifu-interact.css"></style><link rel="stylesheet" href="/css/waifu-interact.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: 'confirm'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/links/"><span class="navItemTitle">Link</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>数论与算法应用之质数性质与基础质数筛</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2026-03-20T02:30:00.000Z" id="date"> 2026-03-20</time></div></span><br><span>Last Update: <div class="control"><time datetime="2026-03-20T04:25:50.269Z" id="updated"> 2026-03-20</time></div></span></div></div><hr><div id="post-content"><p>质数是数论中最基础、最重要的概念之一。<br>在算法题中，质数相关知识也经常出现，例如：</p>
+<ul>
+<li>判断一个数是不是质数</li>
+<li>求某个范围内的所有质数</li>
+<li>分解质因数</li>
+<li>与最大公约数、最小公倍数结合考查</li>
+</ul>
+<p>因此，掌握质数的基本性质和基础筛法非常重要</p>
+<span id="more"></span>
+
+<h2 id="一、什么是质数"><a href="#一、什么是质数" class="headerlink" title="一、什么是质数"></a>一、什么是质数</h2><p>质数，也叫素数，是指：</p>
+<p><strong>大于 1，并且除了 1 和它本身以外，不能被其他正整数整除的数</strong></p>
+<p>例如：</p>
+<ul>
+<li><code>2</code>、<code>3</code>、<code>5</code>、<code>7</code> 是质数</li>
+<li><code>4</code>、<code>6</code>、<code>8</code>、<code>9</code> 不是质数</li>
+</ul>
+<p>其中 <code>2</code> 是最小的质数，也是唯一的偶质数</p>
+<h2 id="二、质数的基本性质"><a href="#二、质数的基本性质" class="headerlink" title="二、质数的基本性质"></a>二、质数的基本性质</h2><h3 id="1-质数大于-1"><a href="#1-质数大于-1" class="headerlink" title="1. 质数大于 1"></a>1. 质数大于 1</h3><p><code>1</code> 不是质数，这一点初学者很容易弄错</p>
+<h3 id="2-除了-2-以外，所有偶数都不是质数"><a href="#2-除了-2-以外，所有偶数都不是质数" class="headerlink" title="2. 除了 2 以外，所有偶数都不是质数"></a>2. 除了 2 以外，所有偶数都不是质数</h3><p>因为它们都能被 <code>2</code> 整除</p>
+<h3 id="3-一个合数一定可以分解成若干个质数的乘积"><a href="#3-一个合数一定可以分解成若干个质数的乘积" class="headerlink" title="3. 一个合数一定可以分解成若干个质数的乘积"></a>3. 一个合数一定可以分解成若干个质数的乘积</h3><p>这就是算术基本定理的核心思想</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">12 = 2 × 2 × 3<br>18 = 2 × 3 × 3<br></code></pre></td></tr></table></figure>
+
+<h2 id="三、如何判断一个数是不是质数"><a href="#三、如何判断一个数是不是质数" class="headerlink" title="三、如何判断一个数是不是质数"></a>三、如何判断一个数是不是质数</h2><p>最直接的方法就是试除。</p>
+<p>如果一个数 <code>n</code> 能被某个 <code>2 ~ n-1</code> 之间的数整除，那它就不是质数</p>
+<p>但这样效率比较低</p>
+<p>更好的方法是：</p>
+<p><strong>只需要检查到 <code>sqrt(n)</code></strong></p>
+<p>原因是：</p>
+<p>如果 <code>n = a × b</code>，那么至少有一个因子不大于 <code>sqrt(n)</code></p>
+<p>所以只要在 <code>2 ~ sqrt(n)</code> 中没有找到因子，就可以判断 <code>n</code> 是质数</p>
+<h2 id="四、判断质数的代码"><a href="#四、判断质数的代码" class="headerlink" title="四、判断质数的代码"></a>四、判断质数的代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">isPrime</span><span class="hljs-params">(<span class="hljs-type">int</span> n)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">2</span>; i * i &lt;= n; i++) &#123;<br>        <span class="hljs-keyword">if</span> (n % i == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">int</span> n;<br>    cin &gt;&gt; n;<br><br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isPrime</span>(n)) cout &lt;&lt; <span class="hljs-string">&quot;Yes&quot;</span> &lt;&lt; endl;<br>    <span class="hljs-keyword">else</span> cout &lt;&lt; <span class="hljs-string">&quot;No&quot;</span> &lt;&lt; endl;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="五、为什么循环条件写成-i-i"><a href="#五、为什么循环条件写成-i-i" class="headerlink" title="五、为什么循环条件写成 i * i &lt;= n"></a>五、为什么循环条件写成 <code>i * i &lt;= n</code></h2><p>这是为了避免频繁调用 <code>sqrt()</code>。<br>它和 <code>i &lt;= sqrt(n)</code> 在逻辑上是等价的，但写起来更方便</p>
+<h2 id="六、什么是质数筛"><a href="#六、什么是质数筛" class="headerlink" title="六、什么是质数筛"></a>六、什么是质数筛</h2><p>如果题目不是判断一个数，而是要求：</p>
+<p><strong>求 1 到 n 之间所有的质数</strong></p>
+<p>那一个一个判断就会比较慢。<br>这时候就要用到“筛法”</p>
+<p>最基础的是：<strong>埃氏筛</strong></p>
+<h2 id="七、埃氏筛的思想"><a href="#七、埃氏筛的思想" class="headerlink" title="七、埃氏筛的思想"></a>七、埃氏筛的思想</h2><p>埃氏筛的核心思想是：</p>
+<ol>
+<li>先假设 <code>2 ~ n</code> 都是质数</li>
+<li>从小到大枚举每个数</li>
+<li>如果这个数还没被标记掉，说明它是质数</li>
+<li>然后把它的倍数都标记为合数</li>
+</ol>
+<p>例如筛到 <code>2</code> 时，就把：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">4, 6, 8, 10, ...<br></code></pre></td></tr></table></figure>
+
+<p>标成合数。</p>
+<p>筛到 <code>3</code> 时，再把：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">6, 9, 12, 15, ...<br></code></pre></td></tr></table></figure>
+
+<p>标成合数。</p>
+<p>最后剩下没被标记的就是质数。</p>
+<h2 id="八、埃氏筛代码"><a href="#八、埃氏筛代码" class="headerlink" title="八、埃氏筛代码"></a>八、埃氏筛代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span> N = <span class="hljs-number">1000005</span>;<br><span class="hljs-type">bool</span> isComposite[N];<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">int</span> n;<br>    cin &gt;&gt; n;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">2</span>; i * i &lt;= n; i++) &#123;<br>        <span class="hljs-keyword">if</span> (!isComposite[i]) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = i * i; j &lt;= n; j += i) &#123;<br>                isComposite[j] = <span class="hljs-literal">true</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">2</span>; i &lt;= n; i++) &#123;<br>        <span class="hljs-keyword">if</span> (!isComposite[i]) &#123;<br>            cout &lt;&lt; i &lt;&lt; <span class="hljs-string">&quot; &quot;</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="九、为什么从-i-i-开始筛"><a href="#九、为什么从-i-i-开始筛" class="headerlink" title="九、为什么从 i * i 开始筛"></a>九、为什么从 <code>i * i</code> 开始筛</h2><p>例如当我们筛 <code>5</code> 的倍数时：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">10, 15, 20<br></code></pre></td></tr></table></figure>
+
+<p>这些数其实在筛 <code>2</code> 和 <code>3</code> 的时候就已经处理过了。<br>因此，从 <code>i * i</code> 开始更高效</p>
+<h2 id="十、样例"><a href="#十、样例" class="headerlink" title="十、样例"></a>十、样例</h2><p>输入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">20<br></code></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">2 3 5 7 11 13 17 19<br></code></pre></td></tr></table></figure>
+
+<h2 id="十一、质数筛的意义"><a href="#十一、质数筛的意义" class="headerlink" title="十一、质数筛的意义"></a>十一、质数筛的意义</h2><p>筛法最大的优点就是：</p>
+<p><strong>一次预处理，快速得到一整个区间内的所有质数</strong></p>
+<p>它特别适合这类题目：</p>
+<ul>
+<li>求区间内质数个数</li>
+<li>输出所有质数</li>
+<li>做质数表预处理</li>
+<li>配合数论题使用</li>
+</ul>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2026/03/20/C-%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E4%B9%8B%E9%AB%98%E7%B2%BE%E5%BA%A6%E5%8A%A0%E6%B3%95/">← Next C++基础算法之高精度加法</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/03/20/C-%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E4%B9%8B%E6%B7%B1%E6%90%9C%E7%9A%84%E5%89%AA%E6%9E%9D%E6%8A%80%E5%B7%A7/">C++基础算法之深搜的剪枝技巧 Prev →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="To Catalog">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">与猫为邻</a></h1><div id="description"><p></p></div><div id="social-links"><a class="social" target="_blank" rel="noopener" href="https://github.com/YuMaoWeiLin"><i class="fab fa-github" alt="GitHub"></i></a></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E8%B4%A8%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">一、什么是质数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%B4%A8%E6%95%B0%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%A7%E8%B4%A8"><span class="toc-number">2.</span> <span class="toc-text">二、质数的基本性质</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%B4%A8%E6%95%B0%E5%A4%A7%E4%BA%8E-1"><span class="toc-number">2.1.</span> <span class="toc-text">1. 质数大于 1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%99%A4%E4%BA%86-2-%E4%BB%A5%E5%A4%96%EF%BC%8C%E6%89%80%E6%9C%89%E5%81%B6%E6%95%B0%E9%83%BD%E4%B8%8D%E6%98%AF%E8%B4%A8%E6%95%B0"><span class="toc-number">2.2.</span> <span class="toc-text">2. 除了 2 以外，所有偶数都不是质数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%B8%80%E4%B8%AA%E5%90%88%E6%95%B0%E4%B8%80%E5%AE%9A%E5%8F%AF%E4%BB%A5%E5%88%86%E8%A7%A3%E6%88%90%E8%8B%A5%E5%B9%B2%E4%B8%AA%E8%B4%A8%E6%95%B0%E7%9A%84%E4%B9%98%E7%A7%AF"><span class="toc-number">2.3.</span> <span class="toc-text">3. 一个合数一定可以分解成若干个质数的乘积</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E4%B8%80%E4%B8%AA%E6%95%B0%E6%98%AF%E4%B8%8D%E6%98%AF%E8%B4%A8%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">三、如何判断一个数是不是质数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%88%A4%E6%96%AD%E8%B4%A8%E6%95%B0%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">四、判断质数的代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BE%AA%E7%8E%AF%E6%9D%A1%E4%BB%B6%E5%86%99%E6%88%90-i-i"><span class="toc-number">5.</span> <span class="toc-text">五、为什么循环条件写成 i * i &lt;&#x3D; n</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E8%B4%A8%E6%95%B0%E7%AD%9B"><span class="toc-number">6.</span> <span class="toc-text">六、什么是质数筛</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%9F%83%E6%B0%8F%E7%AD%9B%E7%9A%84%E6%80%9D%E6%83%B3"><span class="toc-number">7.</span> <span class="toc-text">七、埃氏筛的思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E5%9F%83%E6%B0%8F%E7%AD%9B%E4%BB%A3%E7%A0%81"><span class="toc-number">8.</span> <span class="toc-text">八、埃氏筛代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BB%8E-i-i-%E5%BC%80%E5%A7%8B%E7%AD%9B"><span class="toc-number">9.</span> <span class="toc-text">九、为什么从 i * i 开始筛</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E6%A0%B7%E4%BE%8B"><span class="toc-number">10.</span> <span class="toc-text">十、样例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E8%B4%A8%E6%95%B0%E7%AD%9B%E7%9A%84%E6%84%8F%E4%B9%89"><span class="toc-number">11.</span> <span class="toc-text">十一、质数筛的意义</span></a></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="/js/music-player.js"></script><script defer src="/js/waifu-interact.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"https://cdn.jsdelivr.net/npm/live2d-widget-model-haru@1.0.5/02/assets/haru02.model.json"},"display":{"position":"left","width":140,"height":280,"hOffset":10,"vOffset":-10},"mobile":{"show":false},"react":{"opacityDefault":0.9,"opacityOnHover":1}});</script></body></html>

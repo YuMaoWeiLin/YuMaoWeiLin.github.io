@@ -1,8 +1,8 @@
 #waifu-hotzones {
   position: absolute;
-  inset: 0;
-  z-index: 20;
+  z-index: 99999 !important;
   pointer-events: none;
+  box-sizing: border-box;
 }
 
 .waifu-zone {
@@ -10,14 +10,19 @@
   pointer-events: auto;
   cursor: pointer;
   background: transparent;
+  box-sizing: border-box;
+  border: none;
+  color: transparent;
+  font-size: 0;
+  padding: 0;
 }
 
 #waifu-bubble {
   position: absolute;
-  left: 150px;
-  bottom: 210px;
-  min-width: 160px;
-  max-width: 240px;
+  left: 120px;
+  bottom: 170px;
+  min-width: 140px;
+  max-width: 220px;
   padding: 10px 12px;
   color: #fff;
   background: rgba(15, 22, 30, 0.94);
@@ -30,7 +35,7 @@
   transform: translateY(8px);
   pointer-events: none;
   transition: all 0.2s ease;
-  z-index: 25;
+  z-index: 100000;
 }
 
 #waifu-bubble.show {
@@ -62,12 +67,12 @@
   100% { transform: translateY(0) scale(1); }
 }
 
-@media (max-width: 768px) {
-  #waifu-bubble {
-    left: 110px;
-    bottom: 170px;
-    min-width: 120px;
-    max-width: 180px;
-    font-size: 12px;
-  }
+#live2dcanvas {
+  pointer-events: none !important;
+}
+
+#live2d-widget,
+#live2d-widget-model,
+canvas#live2dcanvas {
+  box-sizing: border-box;
 }

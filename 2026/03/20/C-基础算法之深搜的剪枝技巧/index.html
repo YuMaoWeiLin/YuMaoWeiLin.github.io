@@ -1,0 +1,139 @@
+<!DOCTYPE html><html lang="en" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>C++基础算法之深搜的剪枝技巧 | 与猫为邻的小站</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.ttf");
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":15,"search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><style defer src="/css/music-player.css"></style><link rel="stylesheet" href="/css/music-player.css"><style defer src="/css/waifu-interact.css"></style><link rel="stylesheet" href="/css/waifu-interact.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: 'confirm'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/links/"><span class="navItemTitle">Link</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>C++基础算法之深搜的剪枝技巧</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2026-03-20T02:15:00.000Z" id="date"> 2026-03-20</time></div></span><br><span>Last Update: <div class="control"><time datetime="2026-03-20T04:23:42.091Z" id="updated"> 2026-03-20</time></div></span></div></div><hr><div id="post-content"><p>在使用深度优先搜索时，如果把所有情况都无脑搜索一遍，往往会非常慢。<br>这时就需要一种优化方法：<strong>剪枝</strong></p>
+<p>所谓剪枝，就是：</p>
+<p><strong>在搜索过程中，提前判断某些分支不可能产生最优解或合法解，于是直接停止继续搜索</strong></p>
+<p>这样就能大大减少搜索量，提高运行效率</p>
+<span id="more"></span>
+
+<h2 id="一、什么是剪枝"><a href="#一、什么是剪枝" class="headerlink" title="一、什么是剪枝"></a>一、什么是剪枝</h2><p>可以把整个搜索过程想成一棵树。<br>如果某个分支已经确定不可能有答案，那就像把这根树枝剪掉，不再继续往下搜索</p>
+<p>因此，剪枝的目的就是：</p>
+<ul>
+<li>减少无效搜索</li>
+<li>提高程序速度</li>
+<li>避免超时</li>
+</ul>
+<h2 id="二、为什么-DFS-常常需要剪枝"><a href="#二、为什么-DFS-常常需要剪枝" class="headerlink" title="二、为什么 DFS 常常需要剪枝"></a>二、为什么 DFS 常常需要剪枝</h2><p>DFS 的特点是会把所有可能情况都试一遍<br>如果问题规模稍大，搜索树就会非常庞大</p>
+<p>例如：</p>
+<ul>
+<li>枚举排列：<code>n!</code></li>
+<li>枚举子集：<code>2^n</code></li>
+<li>某些组合问题：分支数非常多</li>
+</ul>
+<p>如果不剪枝，程序可能要跑很久</p>
+<h2 id="三、常见剪枝思路"><a href="#三、常见剪枝思路" class="headerlink" title="三、常见剪枝思路"></a>三、常见剪枝思路</h2><p>DFS 中常见的剪枝方法有以下几种。</p>
+<h3 id="1-越界剪枝"><a href="#1-越界剪枝" class="headerlink" title="1. 越界剪枝"></a>1. 越界剪枝</h3><p>如果当前状态已经不合法，就立刻返回</p>
+<p>例如走迷宫时，如果坐标越界，就不必继续搜</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">if</span> (x &lt; <span class="hljs-number">0</span> || x &gt;= n || y &lt; <span class="hljs-number">0</span> || y &gt;= m) <span class="hljs-keyword">return</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-重复状态剪枝"><a href="#2-重复状态剪枝" class="headerlink" title="2. 重复状态剪枝"></a>2. 重复状态剪枝</h3><p>如果某个状态已经访问过，就不要再重复访问</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">if</span> (vis[x][y]) <span class="hljs-keyword">return</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-最优性剪枝"><a href="#3-最优性剪枝" class="headerlink" title="3. 最优性剪枝"></a>3. 最优性剪枝</h3><p>如果当前代价已经不可能优于当前最优答案，就直接停止</p>
+<p>例如求最小步数时：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">if</span> (step &gt;= ans) <span class="hljs-keyword">return</span>;<br></code></pre></td></tr></table></figure>
+
+<p>这表示：当前已经走了这么多步，甚至不比已有答案更好，就没必要再搜下去了</p>
+<h3 id="4-可行性剪枝"><a href="#4-可行性剪枝" class="headerlink" title="4. 可行性剪枝"></a>4. 可行性剪枝</h3><p>如果从当前状态出发，无论怎么走都不可能成功，就提前停止</p>
+<p>这种剪枝往往需要结合题目性质来判断</p>
+<h3 id="5-排序后剪枝"><a href="#5-排序后剪枝" class="headerlink" title="5. 排序后剪枝"></a>5. 排序后剪枝</h3><p>有些题目先排序，再搜索，可以更方便地剪枝</p>
+<p>例如组合求和问题里，若数组已排序：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">if</span> (sum + a[i] &gt; target) <span class="hljs-keyword">break</span>;<br></code></pre></td></tr></table></figure>
+
+<p>后面的数只会更大，因此可以直接退出循环</p>
+<h2 id="四、例子：求最小和的组合"><a href="#四、例子：求最小和的组合" class="headerlink" title="四、例子：求最小和的组合"></a>四、例子：求最小和的组合</h2><p>假设我们要从若干个数中选出若干个，使总和尽量接近目标值。<br>如果当前和已经超过目标，而且我们只关心不超过目标的情况，就可以直接剪枝</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">int</span> n, target;<br><span class="hljs-type">int</span> a[<span class="hljs-number">25</span>];<br><span class="hljs-type">int</span> ans = <span class="hljs-number">0</span>;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">dfs</span><span class="hljs-params">(<span class="hljs-type">int</span> step, <span class="hljs-type">int</span> sum)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (sum &gt; target) <span class="hljs-keyword">return</span>;<br><br>    <span class="hljs-keyword">if</span> (sum &gt; ans) ans = sum;<br><br>    <span class="hljs-keyword">if</span> (step &gt; n) <span class="hljs-keyword">return</span>;<br><br>    <span class="hljs-built_in">dfs</span>(step + <span class="hljs-number">1</span>, sum + a[step]);<br>    <span class="hljs-built_in">dfs</span>(step + <span class="hljs-number">1</span>, sum);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    cin &gt;&gt; n &gt;&gt; target;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++) cin &gt;&gt; a[i];<br><br>    <span class="hljs-built_in">dfs</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>);<br>    cout &lt;&lt; ans &lt;&lt; endl;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="五、代码中的剪枝在哪里"><a href="#五、代码中的剪枝在哪里" class="headerlink" title="五、代码中的剪枝在哪里"></a>五、代码中的剪枝在哪里</h2><p>关键就是这一句：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">if</span> (sum &gt; target) <span class="hljs-keyword">return</span>;<br></code></pre></td></tr></table></figure>
+
+<p>意思是：</p>
+<p>如果当前和已经超过目标值，就不用继续往下搜了，因为再选只会更大</p>
+<p>这就是最典型的可行性剪枝。</p>
+<h2 id="六、再举一个例子：求最短步数"><a href="#六、再举一个例子：求最短步数" class="headerlink" title="六、再举一个例子：求最短步数"></a>六、再举一个例子：求最短步数</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">int</span> ans = <span class="hljs-number">1e9</span>;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">dfs</span><span class="hljs-params">(<span class="hljs-type">int</span> step)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (step &gt;= ans) <span class="hljs-keyword">return</span>;<br><br>    <span class="hljs-keyword">if</span> (满足目标条件) &#123;<br>        ans = step;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (每一种选择) &#123;<br>        <span class="hljs-keyword">if</span> (合法) &#123;<br>            <span class="hljs-built_in">dfs</span>(step + <span class="hljs-number">1</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">if</span> (step &gt;= ans) <span class="hljs-keyword">return</span>;<br></code></pre></td></tr></table></figure>
+
+<p>就是最优性剪枝。</p>
+<p>它表示：<br>当前已经走了 <code>step</code> 步，但我们已经找到更优答案 <code>ans</code>，那这条分支就没有必要继续搜索</p>
+<h2 id="七、剪枝不等于乱剪"><a href="#七、剪枝不等于乱剪" class="headerlink" title="七、剪枝不等于乱剪"></a>七、剪枝不等于乱剪</h2><p>剪枝虽然能加快速度，但一定要注意：</p>
+<p><strong>剪枝不能把正确答案剪掉</strong></p>
+<p>所以写剪枝条件时必须非常谨慎，确保：</p>
+<ul>
+<li>被剪掉的分支一定无效</li>
+<li>或一定不可能更优</li>
+</ul>
+<p>如果条件写错，程序可能会直接漏解</p>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2026/03/20/%E6%95%B0%E8%AE%BA%E4%B8%8E%E7%AE%97%E6%B3%95%E5%BA%94%E7%94%A8%E4%B9%8B%E8%B4%A8%E6%95%B0%E6%80%A7%E8%B4%A8%E4%B8%8E%E5%9F%BA%E7%A1%80%E8%B4%A8%E6%95%B0%E7%AD%9B/">← Next 数论与算法应用之质数性质与基础质数筛</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/03/20/C-%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E4%B9%8B%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">C++基础算法之深度优先搜索 Prev →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="To Catalog">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">与猫为邻</a></h1><div id="description"><p></p></div><div id="social-links"><a class="social" target="_blank" rel="noopener" href="https://github.com/YuMaoWeiLin"><i class="fab fa-github" alt="GitHub"></i></a></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E5%89%AA%E6%9E%9D"><span class="toc-number">1.</span> <span class="toc-text">一、什么是剪枝</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88-DFS-%E5%B8%B8%E5%B8%B8%E9%9C%80%E8%A6%81%E5%89%AA%E6%9E%9D"><span class="toc-number">2.</span> <span class="toc-text">二、为什么 DFS 常常需要剪枝</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%B8%B8%E8%A7%81%E5%89%AA%E6%9E%9D%E6%80%9D%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">三、常见剪枝思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%B6%8A%E7%95%8C%E5%89%AA%E6%9E%9D"><span class="toc-number">3.1.</span> <span class="toc-text">1. 越界剪枝</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%87%8D%E5%A4%8D%E7%8A%B6%E6%80%81%E5%89%AA%E6%9E%9D"><span class="toc-number">3.2.</span> <span class="toc-text">2. 重复状态剪枝</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9C%80%E4%BC%98%E6%80%A7%E5%89%AA%E6%9E%9D"><span class="toc-number">3.3.</span> <span class="toc-text">3. 最优性剪枝</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%8F%AF%E8%A1%8C%E6%80%A7%E5%89%AA%E6%9E%9D"><span class="toc-number">3.4.</span> <span class="toc-text">4. 可行性剪枝</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%8E%92%E5%BA%8F%E5%90%8E%E5%89%AA%E6%9E%9D"><span class="toc-number">3.5.</span> <span class="toc-text">5. 排序后剪枝</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BE%8B%E5%AD%90%EF%BC%9A%E6%B1%82%E6%9C%80%E5%B0%8F%E5%92%8C%E7%9A%84%E7%BB%84%E5%90%88"><span class="toc-number">4.</span> <span class="toc-text">四、例子：求最小和的组合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E5%89%AA%E6%9E%9D%E5%9C%A8%E5%93%AA%E9%87%8C"><span class="toc-number">5.</span> <span class="toc-text">五、代码中的剪枝在哪里</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%86%8D%E4%B8%BE%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%EF%BC%9A%E6%B1%82%E6%9C%80%E7%9F%AD%E6%AD%A5%E6%95%B0"><span class="toc-number">6.</span> <span class="toc-text">六、再举一个例子：求最短步数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%89%AA%E6%9E%9D%E4%B8%8D%E7%AD%89%E4%BA%8E%E4%B9%B1%E5%89%AA"><span class="toc-number">7.</span> <span class="toc-text">七、剪枝不等于乱剪</span></a></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="/js/music-player.js"></script><script defer src="/js/waifu-interact.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"https://cdn.jsdelivr.net/npm/live2d-widget-model-haru@1.0.5/02/assets/haru02.model.json"},"display":{"position":"left","width":140,"height":280,"hOffset":10,"vOffset":-10},"mobile":{"show":false},"react":{"opacityDefault":0.9,"opacityOnHover":1}});</script></body></html>

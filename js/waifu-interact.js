@@ -1,30 +1,28 @@
 document.addEventListener("DOMContentLoaded", function () {
   const lines = {
     head: [
-      "别戳我头啦。",
-      "头发会乱掉的。",
-      "摸头可以，轻一点。"
+      "别戳我头啦",
+      "头发会乱掉的"
     ],
     face: [
-      "捏脸是要收费的。",
-      "脸不是这样玩的啦。",
-      "你是不是又手痒了？"
+      "捏脸是要收费的",
+      "脸不是这样玩的啦"
     ],
     shoulder: [
-      "这里不许乱碰哦。",
-      "喂，注意一点分寸。",
-      "突然碰我会吓一跳的。"
+      "这里不许乱碰哦",
+	"变态啊!",
+	"别摸了",
+      "我要报警了!",
+	"喂,幺幺零吗"
     ],
     hand: [
       "要牵手吗？",
-      "手在这里哦。",
-      "今天也要一起加油。"
+      "手在这里哦"
     ],
     body: [
-      "欢迎来到我的博客。",
-      "右下角可以听歌哦",
-      "点我一下就会说话。",
-	"咕咕嘎嘎!"
+      "欢迎来到我的博客",
+	"右边可以听歌和切换主题哦",
+      "点我一下就会说话"
     ]
   };
 
@@ -53,6 +51,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!root || root.dataset.waifuEnhanced === "1") return;
     root.dataset.waifuEnhanced = "1";
 
+    const canvas =
+      root.querySelector("#live2dcanvas") ||
+      document.getElementById("live2dcanvas") ||
+      root.querySelector("canvas");
+
+    if (!canvas) return;
+
     if (getComputedStyle(root).position === "static") {
       root.style.position = "fixed";
     }
@@ -62,26 +67,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const bubble = document.createElement("div");
     bubble.id = "waifu-bubble";
-    bubble.textContent = "你好呀，欢迎来到这里。";
+    bubble.textContent = "调试模式已开启";
 
     const zones = [
-  { name: "body", className: "waifu-zone", style: "left:18%;top:0;width:64%;height:100%;z-index:1;" },
-  { name: "shoulder", className: "waifu-zone", style: "left:22%;top:42%;width:56%;height:20%;z-index:2;" },
-  { name: "hand", className: "waifu-zone", style: "left:62%;top:58%;width:20%;height:18%;z-index:3;" },
-  { name: "face", className: "waifu-zone", style: "left:25%;top:24%;width:48%;height:18%;z-index:4;" },
-  { name: "head", className: "waifu-zone", style: "left:18%;top:8%;width:64%;height:22%;z-index:5;" }
+  { name: "body", label: "body", style: "left:20%;top:10%;width:50%;height:82%;z-index:1;" },
+  { name: "shoulder", label: "shoulder", style: "left:22%;top:46%;width:46%;height:16%;z-index:2;" },
+
+  { name: "hand", label: "left-hand", style: "left:12%;top:64%;width:14%;height:16%;z-index:3;" },
+  { name: "hand", label: "right-hand", style: "left:60%;top:66%;width:14%;height:14%;z-index:3;" },
+
+  { name: "face", label: "face", style: "left:30%;top:31%;width:30%;height:14%;z-index:4;" },
+  { name: "head", label: "head", style: "left:24%;top:14%;width:42%;height:16%;z-index:5;" }
 ];
 
     zones.forEach(function (z) {
       const el = document.createElement("div");
-      el.className = z.className;
+      el.className = "waifu-zone";
       el.dataset.zone = z.name;
+      el.textContent = z.label;
       el.style.cssText = z.style;
       hotzones.appendChild(el);
     });
 
     root.appendChild(hotzones);
     root.appendChild(bubble);
+
+    function syncHotzones() {
+      const rect = canvas.getBoundingClientRect();
+      const rootRect = root.getBoundingClientRect();
+
+      hotzones.style.left = (rect.left - rootRect.left) + "px";
+      hotzones.style.top = (rect.top - rootRect.top) + "px";
+      hotzones.style.width = rect.width + "px";
+      hotzones.style.height = rect.height + "px";
+    }
+
+    syncHotzones();
+    window.addEventListener("resize", syncHotzones);
+    window.addEventListener("scroll", syncHotzones);
+    setInterval(syncHotzones, 800);
 
     let timer = null;
 
@@ -96,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
       clearTimeout(timer);
       timer = setTimeout(function () {
         bubble.classList.remove("show");
-      }, 2200);
+      }, 1800);
     }
 
     hotzones.addEventListener("click", function (e) {
@@ -107,14 +131,6 @@ document.addEventListener("DOMContentLoaded", function () {
       say(pick(lines[zone] || lines.body));
       e.stopPropagation();
     });
-
-    hotzones.addEventListener("mouseenter", function () {
-      bubble.classList.add("show");
-    }, true);
-
-    hotzones.addEventListener("mouseleave", function () {
-      bubble.classList.remove("show");
-    }, true);
   }
 
   let retry = 0;
