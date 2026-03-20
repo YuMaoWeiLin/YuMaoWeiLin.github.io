@@ -1,0 +1,128 @@
+<!DOCTYPE html><html lang="en" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>C++基础算法之广度优先搜索 | 与猫为邻的小站</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.ttf");
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":15,"search":{"preload":false,"activeHolder":"键入以继续","blurHolder":"数据检索","noResult":"无 $0 相关数据"},"code":{"codeInfo":"$0 - $1 行","copy":"复制"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><style defer src="/css/music-player.css"></style><link rel="stylesheet" href="/css/music-player.css"><style defer src="/css/waifu-interact.css"></style><link rel="stylesheet" href="/css/waifu-interact.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: '确认'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/links/"><span class="navItemTitle">Link</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>C++基础算法之广度优先搜索</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2026-03-20T03:00:00.000Z" id="date"> 2026-03-20</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2026-03-20T04:40:50.272Z" id="updated"> 2026-03-20</time></div></span></div></div><hr><div id="post-content"><p>广度优先搜索，英文叫 <strong>Breadth First Search</strong>，通常简称 <strong>BFS</strong>。<br>它是一种非常经典的搜索算法，常用于图的遍历、迷宫最短路、状态转移等问题<br>BFS 的核心思想可以概括为一句话：</p>
+<p><strong>从起点开始，一层一层向外扩展。</strong></p>
+<span id="more"></span>
+
+<h2 id="一、什么是广度优先搜索"><a href="#一、什么是广度优先搜索" class="headerlink" title="一、什么是广度优先搜索"></a>一、什么是广度优先搜索</h2><p>可以把 BFS 想象成石头落进水里后，水波一圈一圈扩散</p>
+<p>如果我们从一个起点出发：</p>
+<ol>
+<li>先访问距离起点最近的点</li>
+<li>再访问距离起点第二近的点</li>
+<li>然后一层一层继续向外扩展</li>
+</ol>
+<p>这就是“广度优先”的含义</p>
+<p>和深度优先搜索不同，BFS 不是先一条路走到底，而是先把当前这一层全部处理完，再进入下一层</p>
+<h2 id="二、BFS-的基本特征"><a href="#二、BFS-的基本特征" class="headerlink" title="二、BFS 的基本特征"></a>二、BFS 的基本特征</h2><p>广度优先搜索通常有以下特点：</p>
+<ul>
+<li>按层扩展</li>
+<li>常用队列实现</li>
+<li>适合求最短步数</li>
+<li>对无权图最短路尤其常见</li>
+</ul>
+<p>所以在很多“最少几步到达终点”的题目里，BFS 往往是首选</p>
+<h2 id="三、为什么-BFS-能求最短路"><a href="#三、为什么-BFS-能求最短路" class="headerlink" title="三、为什么 BFS 能求最短路"></a>三、为什么 BFS 能求最短路</h2><p>在无权图或者每次移动代价相同的情况下，BFS 总是先访问距离起点更近的点</p>
+<p>因此：</p>
+<p><strong>第一次到达终点时，走过的步数一定是最少的。</strong></p>
+<p>这也是 BFS 在迷宫最短路问题里特别常见的原因</p>
+<h2 id="四、BFS-的基本写法"><a href="#四、BFS-的基本写法" class="headerlink" title="四、BFS 的基本写法"></a>四、BFS 的基本写法</h2><p>最常见的 BFS 模板如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs cpp">queue&lt;状态&gt; q;<br>q.<span class="hljs-built_in">push</span>(起点);<br>标记起点已访问;<br><br><span class="hljs-keyword">while</span> (!q.<span class="hljs-built_in">empty</span>()) &#123;<br>    取出队头;<br>    <span class="hljs-keyword">for</span> (枚举所有下一步) &#123;<br>        <span class="hljs-keyword">if</span> (合法且未访问) &#123;<br>            标记访问;<br>            入队;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里的关键是：<strong>队列先进先出</strong>。<br>这样才能保证按层访问</p>
+<h2 id="五、例子：迷宫最短路"><a href="#五、例子：迷宫最短路" class="headerlink" title="五、例子：迷宫最短路"></a>五、例子：迷宫最短路</h2><p>下面以一个简单的二维迷宫为例，求从左上角走到右下角的最少步数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;queue&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Node</span> &#123;<br>    <span class="hljs-type">int</span> x, y, step;<br>&#125;;<br><br><span class="hljs-type">int</span> n, m;<br><span class="hljs-type">int</span> a[<span class="hljs-number">105</span>][<span class="hljs-number">105</span>];<br><span class="hljs-type">bool</span> vis[<span class="hljs-number">105</span>][<span class="hljs-number">105</span>];<br><br><span class="hljs-type">int</span> dx[<span class="hljs-number">4</span>] = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>&#125;;<br><span class="hljs-type">int</span> dy[<span class="hljs-number">4</span>] = &#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">-1</span>&#125;;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    cin &gt;&gt; n &gt;&gt; m;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; m; j++) &#123;<br>            cin &gt;&gt; a[i][j];<br>        &#125;<br>    &#125;<br><br>    queue&lt;Node&gt; q;<br>    q.<span class="hljs-built_in">push</span>(&#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>&#125;);<br>    vis[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] = <span class="hljs-literal">true</span>;<br><br>    <span class="hljs-keyword">while</span> (!q.<span class="hljs-built_in">empty</span>()) &#123;<br>        Node cur = q.<span class="hljs-built_in">front</span>();<br>        q.<span class="hljs-built_in">pop</span>();<br><br>        <span class="hljs-keyword">if</span> (cur.x == n - <span class="hljs-number">1</span> &amp;&amp; cur.y == m - <span class="hljs-number">1</span>) &#123;<br>            cout &lt;&lt; cur.step &lt;&lt; endl;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; i++) &#123;<br>            <span class="hljs-type">int</span> nx = cur.x + dx[i];<br>            <span class="hljs-type">int</span> ny = cur.y + dy[i];<br><br>            <span class="hljs-keyword">if</span> (nx &gt;= <span class="hljs-number">0</span> &amp;&amp; nx &lt; n &amp;&amp; ny &gt;= <span class="hljs-number">0</span> &amp;&amp; ny &lt; m &amp;&amp;<br>                a[nx][ny] == <span class="hljs-number">0</span> &amp;&amp; !vis[nx][ny]) &#123;<br>                vis[nx][ny] = <span class="hljs-literal">true</span>;<br>                q.<span class="hljs-built_in">push</span>(&#123;nx, ny, cur.step + <span class="hljs-number">1</span>&#125;);<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    cout &lt;&lt; <span class="hljs-number">-1</span> &lt;&lt; endl;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="六、代码讲解"><a href="#六、代码讲解" class="headerlink" title="六、代码讲解"></a>六、代码讲解</h2><h3 id="1-队列存的是什么"><a href="#1-队列存的是什么" class="headerlink" title="1. 队列存的是什么"></a>1. 队列存的是什么</h3><p>这里队列中存的是一个结构体：</p>
+<ul>
+<li><code>x</code>：当前横坐标</li>
+<li><code>y</code>：当前纵坐标</li>
+<li><code>step</code>：从起点走到这里的步数</li>
+</ul>
+<h3 id="2-为什么要用-vis"><a href="#2-为什么要用-vis" class="headerlink" title="2. 为什么要用 vis"></a>2. 为什么要用 <code>vis</code></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp">vis[nx][ny] = <span class="hljs-literal">true</span>;<br></code></pre></td></tr></table></figure>
+
+<p>这是为了防止同一个位置被重复加入队列，否则会造成重复搜索，甚至死循环</p>
+<h3 id="3-为什么第一次到终点就可以返回"><a href="#3-为什么第一次到终点就可以返回" class="headerlink" title="3. 为什么第一次到终点就可以返回"></a>3. 为什么第一次到终点就可以返回</h3><p>因为 BFS 是一层一层扩展的<br>第一次到达终点，说明当前步数一定最小</p>
+<h2 id="七、DFS-和-BFS-的区别"><a href="#七、DFS-和-BFS-的区别" class="headerlink" title="七、DFS 和 BFS 的区别"></a>七、DFS 和 BFS 的区别</h2><p>DFS：</p>
+<ul>
+<li>一条路走到底</li>
+<li>常用递归</li>
+<li>适合枚举所有情况</li>
+</ul>
+<p>BFS：</p>
+<ul>
+<li>一层一层扩展</li>
+<li>常用队列</li>
+<li>适合求最短步数</li>
+</ul>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2026/03/20/C-%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E4%B9%8B%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">← 下一篇 C++基础算法之二分查找</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/03/20/%E6%95%B0%E8%AE%BA%E4%B8%8E%E7%AE%97%E6%B3%95%E5%BA%94%E7%94%A8%E4%B9%8B%E8%B4%A8%E6%95%B0%E6%80%A7%E8%B4%A8%E4%B8%8E%E5%9F%BA%E7%A1%80%E8%B4%A8%E6%95%B0%E7%AD%9B/">数论与算法应用之质数性质与基础质数筛 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">与猫为邻</a></h1><div id="description"><p></p></div><div id="social-links"><a class="social" target="_blank" rel="noopener" href="https://github.com/YuMaoWeiLin"><i class="fab fa-github" alt="GitHub"></i></a></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2"><span class="toc-number">1.</span> <span class="toc-text">一、什么是广度优先搜索</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81BFS-%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%89%B9%E5%BE%81"><span class="toc-number">2.</span> <span class="toc-text">二、BFS 的基本特征</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88-BFS-%E8%83%BD%E6%B1%82%E6%9C%80%E7%9F%AD%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">三、为什么 BFS 能求最短路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81BFS-%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%86%99%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">四、BFS 的基本写法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%BE%8B%E5%AD%90%EF%BC%9A%E8%BF%B7%E5%AE%AB%E6%9C%80%E7%9F%AD%E8%B7%AF"><span class="toc-number">5.</span> <span class="toc-text">五、例子：迷宫最短路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3"><span class="toc-number">6.</span> <span class="toc-text">六、代码讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%98%9F%E5%88%97%E5%AD%98%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">6.1.</span> <span class="toc-text">1. 队列存的是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8-vis"><span class="toc-number">6.2.</span> <span class="toc-text">2. 为什么要用 vis</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%B8%BA%E4%BB%80%E4%B9%88%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%88%B0%E7%BB%88%E7%82%B9%E5%B0%B1%E5%8F%AF%E4%BB%A5%E8%BF%94%E5%9B%9E"><span class="toc-number">6.3.</span> <span class="toc-text">3. 为什么第一次到终点就可以返回</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81DFS-%E5%92%8C-BFS-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">7.</span> <span class="toc-text">七、DFS 和 BFS 的区别</span></a></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="/js/music-player.js"></script><script defer src="/js/waifu-interact.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"https://cdn.jsdelivr.net/npm/live2d-widget-model-haru@1.0.5/02/assets/haru02.model.json"},"display":{"position":"left","width":140,"height":280,"hOffset":10,"vOffset":-10},"mobile":{"show":false},"react":{"opacityDefault":0.9,"opacityOnHover":1}});</script></body></html>
