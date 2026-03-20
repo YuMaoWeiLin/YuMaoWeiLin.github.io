@@ -1,0 +1,139 @@
+<!DOCTYPE html><html lang="en" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>C++基础算法之双指针 | 与猫为邻的小站</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.ttf");
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":15,"search":{"preload":false,"activeHolder":"键入以继续","blurHolder":"数据检索","noResult":"无 $0 相关数据"},"code":{"codeInfo":"$0 - $1 行","copy":"复制"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><style defer src="/css/music-player.css"></style><link rel="stylesheet" href="/css/music-player.css"><style defer src="/css/waifu-interact.css"></style><link rel="stylesheet" href="/css/waifu-interact.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: '确认'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/links/"><span class="navItemTitle">Link</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>C++基础算法之双指针</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2026-03-20T04:45:00.000Z" id="date"> 2026-03-20</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2026-03-20T12:33:42.447Z" id="updated"> 2026-03-20</time></div></span></div></div><hr><div id="post-content"><p>双指针是一种非常常见的算法技巧。<br>它本身不是某一种固定的数据结构，而是一种处理问题的思路</p>
+<p>双指针常用于：</p>
+<ul>
+<li>有序数组查找</li>
+<li>区间维护</li>
+<li>去重</li>
+<li>滑动窗口</li>
+<li>字符串处理</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="一、什么是双指针"><a href="#一、什么是双指针" class="headerlink" title="一、什么是双指针"></a>一、什么是双指针</h2><p>“双指针”中的两个指针，可以理解成两个下标</p>
+<p>例如：</p>
+<ul>
+<li>一个指针从左往右走</li>
+<li>一个指针从右往左走</li>
+<li>或者两个指针都从左往右走，但速度不同</li>
+</ul>
+<p>根据题目不同，双指针的写法也会不同</p>
+<h2 id="二、双指针为什么有用"><a href="#二、双指针为什么有用" class="headerlink" title="二、双指针为什么有用"></a>二、双指针为什么有用</h2><p>很多问题如果暴力做，需要枚举大量区间或组合<br>但通过两个指针的配合，可以避免重复遍历，从而提高效率</p>
+<p>所以双指针的本质就是：</p>
+<p><strong>把本来要重复做的事情省掉</strong></p>
+<h2 id="三、常见双指针类型"><a href="#三、常见双指针类型" class="headerlink" title="三、常见双指针类型"></a>三、常见双指针类型</h2><h3 id="1-对撞指针"><a href="#1-对撞指针" class="headerlink" title="1. 对撞指针"></a>1. 对撞指针</h3><p>一个在左，一个在右，向中间靠拢</p>
+<h3 id="2-快慢指针"><a href="#2-快慢指针" class="headerlink" title="2. 快慢指针"></a>2. 快慢指针</h3><p>两个都往前走，但一个快，一个慢</p>
+<h3 id="3-滑动窗口"><a href="#3-滑动窗口" class="headerlink" title="3. 滑动窗口"></a>3. 滑动窗口</h3><p>两个指针维护一个区间</p>
+<h2 id="四、例子：有序数组中找两个数之和"><a href="#四、例子：有序数组中找两个数之和" class="headerlink" title="四、例子：有序数组中找两个数之和"></a>四、例子：有序数组中找两个数之和</h2><p>假设给定一个升序数组，问是否存在两个数，它们的和等于目标值</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">1 2 4 7 11 15<br>target = 15<br></code></pre></td></tr></table></figure>
+
+<p>我们可以用两个指针：</p>
+<ul>
+<li>左指针 <code>l</code> 指向最左边</li>
+<li>右指针 <code>r</code> 指向最右边</li>
+</ul>
+<p>如果：</p>
+<ul>
+<li><code>a[l] + a[r] == target</code>，找到答案</li>
+<li>和太小，就让左指针右移</li>
+<li>和太大，就让右指针左移</li>
+</ul>
+<h2 id="五、代码实现"><a href="#五、代码实现" class="headerlink" title="五、代码实现"></a>五、代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">int</span> n, target;<br>    cin &gt;&gt; n &gt;&gt; target;<br><br>    <span class="hljs-type">int</span> a[<span class="hljs-number">1005</span>];<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) cin &gt;&gt; a[i];<br><br>    <span class="hljs-type">int</span> l = <span class="hljs-number">0</span>, r = n - <span class="hljs-number">1</span>;<br>    <span class="hljs-type">bool</span> found = <span class="hljs-literal">false</span>;<br><br>    <span class="hljs-keyword">while</span> (l &lt; r) &#123;<br>        <span class="hljs-type">int</span> sum = a[l] + a[r];<br><br>        <span class="hljs-keyword">if</span> (sum == target) &#123;<br>            cout &lt;&lt; a[l] &lt;&lt; <span class="hljs-string">&quot; &quot;</span> &lt;&lt; a[r] &lt;&lt; endl;<br>            found = <span class="hljs-literal">true</span>;<br>            <span class="hljs-keyword">break</span>;<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (sum &lt; target) &#123;<br>            l++;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            r--;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (!found) cout &lt;&lt; <span class="hljs-string">&quot;No solution&quot;</span> &lt;&lt; endl;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="六、代码讲解"><a href="#六、代码讲解" class="headerlink" title="六、代码讲解"></a>六、代码讲解</h2><h3 id="1-为什么可以移动指针"><a href="#1-为什么可以移动指针" class="headerlink" title="1. 为什么可以移动指针"></a>1. 为什么可以移动指针</h3><p>因为数组是有序的。</p>
+<p>如果当前和太小，说明左边数太小，应该把左指针右移<br>如果当前和太大，说明右边数太大，应该把右指针左移</p>
+<h3 id="2-为什么双指针比暴力更快"><a href="#2-为什么双指针比暴力更快" class="headerlink" title="2. 为什么双指针比暴力更快"></a>2. 为什么双指针比暴力更快</h3><p>暴力做法要枚举所有两两组合，复杂度是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">O(n^2)<br></code></pre></td></tr></table></figure>
+
+<p>双指针只需要线性移动，复杂度是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">O(n)<br></code></pre></td></tr></table></figure>
+
+<h2 id="七、另一个经典例子：去重"><a href="#七、另一个经典例子：去重" class="headerlink" title="七、另一个经典例子：去重"></a>七、另一个经典例子：去重</h2><p>对于有序数组去重，也经常使用双指针</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">int</span> n;<br>    cin &gt;&gt; n;<br><br>    <span class="hljs-type">int</span> a[<span class="hljs-number">1005</span>];<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) cin &gt;&gt; a[i];<br><br>    <span class="hljs-type">int</span> slow = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> fast = <span class="hljs-number">1</span>; fast &lt; n; fast++) &#123;<br>        <span class="hljs-keyword">if</span> (a[fast] != a[slow]) &#123;<br>            slow++;<br>            a[slow] = a[fast];<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt;= slow; i++) &#123;<br>        cout &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">&quot; &quot;</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里：</p>
+<ul>
+<li><code>fast</code> 用来向前扫描</li>
+<li><code>slow</code> 用来维护去重后数组的位置</li>
+</ul>
+<h2 id="八、双指针的适用条件"><a href="#八、双指针的适用条件" class="headerlink" title="八、双指针的适用条件"></a>八、双指针的适用条件</h2><p>双指针经常适用于：</p>
+<ul>
+<li>数组有序</li>
+<li>需要维护一个连续区间</li>
+<li>需要快速缩小搜索范围</li>
+</ul>
+<p>如果题目里有“连续区间”“最短&#x2F;最长子串”“有序数组”这类信息，就可以考虑双指针</p>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages" style="justify-content: flex-end"><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/03/20/%E6%95%B0%E8%AE%BA%E4%B8%8E%E7%AE%97%E6%B3%95%E5%BA%94%E7%94%A8%E4%B9%8B%E5%BF%AB%E9%80%9F%E5%B9%82/">数论与算法应用之快速幂 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">与猫为邻</a></h1><div id="description"><p></p></div><div id="social-links"><a class="social" target="_blank" rel="noopener" href="https://github.com/YuMaoWeiLin"><i class="fab fa-github" alt="GitHub"></i></a></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%8C%E6%8C%87%E9%92%88"><span class="toc-number">1.</span> <span class="toc-text">一、什么是双指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8F%8C%E6%8C%87%E9%92%88%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">二、双指针为什么有用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%B8%B8%E8%A7%81%E5%8F%8C%E6%8C%87%E9%92%88%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">三、常见双指针类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AF%B9%E6%92%9E%E6%8C%87%E9%92%88"><span class="toc-number">3.1.</span> <span class="toc-text">1. 对撞指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%BF%AB%E6%85%A2%E6%8C%87%E9%92%88"><span class="toc-number">3.2.</span> <span class="toc-text">2. 快慢指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3"><span class="toc-number">3.3.</span> <span class="toc-text">3. 滑动窗口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BE%8B%E5%AD%90%EF%BC%9A%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%95%B0%E4%B9%8B%E5%92%8C"><span class="toc-number">4.</span> <span class="toc-text">四、例子：有序数组中找两个数之和</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">五、代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3"><span class="toc-number">6.</span> <span class="toc-text">六、代码讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E7%A7%BB%E5%8A%A8%E6%8C%87%E9%92%88"><span class="toc-number">6.1.</span> <span class="toc-text">1. 为什么可以移动指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%8C%E6%8C%87%E9%92%88%E6%AF%94%E6%9A%B4%E5%8A%9B%E6%9B%B4%E5%BF%AB"><span class="toc-number">6.2.</span> <span class="toc-text">2. 为什么双指针比暴力更快</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%8F%A6%E4%B8%80%E4%B8%AA%E7%BB%8F%E5%85%B8%E4%BE%8B%E5%AD%90%EF%BC%9A%E5%8E%BB%E9%87%8D"><span class="toc-number">7.</span> <span class="toc-text">七、另一个经典例子：去重</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E5%8F%8C%E6%8C%87%E9%92%88%E7%9A%84%E9%80%82%E7%94%A8%E6%9D%A1%E4%BB%B6"><span class="toc-number">8.</span> <span class="toc-text">八、双指针的适用条件</span></a></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="/js/music-player.js"></script><script defer src="/js/waifu-interact.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"https://cdn.jsdelivr.net/npm/live2d-widget-model-haru@1.0.5/02/assets/haru02.model.json"},"display":{"position":"left","width":140,"height":280,"hOffset":10,"vOffset":-10},"mobile":{"show":false},"react":{"opacityDefault":0.9,"opacityOnHover":1}});</script></body></html>

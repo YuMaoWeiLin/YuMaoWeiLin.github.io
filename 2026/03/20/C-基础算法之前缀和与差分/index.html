@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang="en" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>C++基础算法之前缀和与差分 | 与猫为邻的小站</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.ttf");
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":15,"search":{"preload":false,"activeHolder":"键入以继续","blurHolder":"数据检索","noResult":"无 $0 相关数据"},"code":{"codeInfo":"$0 - $1 行","copy":"复制"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><style defer src="/css/music-player.css"></style><link rel="stylesheet" href="/css/music-player.css"><style defer src="/css/waifu-interact.css"></style><link rel="stylesheet" href="/css/waifu-interact.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: '确认'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/links/"><span class="navItemTitle">Link</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>C++基础算法之前缀和与差分</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2026-03-20T04:00:00.000Z" id="date"> 2026-03-20</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2026-03-20T12:27:27.789Z" id="updated"> 2026-03-20</time></div></span></div></div><hr><div id="post-content"><p>前缀和与差分是算法题中非常常见的一组基础技巧<br>它们本质上都是为了让“区间处理”变得更高效</p>
+<p>前缀和擅长解决：</p>
+<ul>
+<li>快速求区间和</li>
+<li>快速统计某段区间的信息</li>
+</ul>
+<p>差分擅长解决：</p>
+<ul>
+<li>快速进行区间加减操作</li>
+<li>批量修改数组</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="一、什么是前缀和"><a href="#一、什么是前缀和" class="headerlink" title="一、什么是前缀和"></a>一、什么是前缀和</h2><p>前缀和可以理解为“从开头一直加到当前位置的总和”</p>
+<p>假设有数组：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">1 2 3 4 5<br></code></pre></td></tr></table></figure>
+
+<p>那么它的前缀和数组就是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">1 3 6 10 15<br></code></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<ul>
+<li>第 1 个位置前缀和是 <code>1</code></li>
+<li>第 3 个位置前缀和是 <code>1 + 2 + 3 = 6</code></li>
+<li>第 5 个位置前缀和是 <code>1 + 2 + 3 + 4 + 5 = 15</code></li>
+</ul>
+<h2 id="二、前缀和有什么用"><a href="#二、前缀和有什么用" class="headerlink" title="二、前缀和有什么用"></a>二、前缀和有什么用</h2><p>前缀和最重要的作用，是能够快速求某个区间的和</p>
+<p>例如要求区间 <code>[l, r]</code> 的和，可以直接用：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sum[r] - sum[l - 1]<br></code></pre></td></tr></table></figure>
+
+<p>这样就不需要每次都重新遍历区间了</p>
+<h2 id="三、前缀和代码实现"><a href="#三、前缀和代码实现" class="headerlink" title="三、前缀和代码实现"></a>三、前缀和代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">int</span> n, q;<br>    cin &gt;&gt; n &gt;&gt; q;<br><br>    <span class="hljs-type">int</span> a[<span class="hljs-number">1005</span>], sum[<span class="hljs-number">1005</span>] = &#123;<span class="hljs-number">0</span>&#125;;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>        cin &gt;&gt; a[i];<br>        sum[i] = sum[i - <span class="hljs-number">1</span>] + a[i];<br>    &#125;<br><br>    <span class="hljs-keyword">while</span> (q--) &#123;<br>        <span class="hljs-type">int</span> l, r;<br>        cin &gt;&gt; l &gt;&gt; r;<br>        cout &lt;&lt; sum[r] - sum[l - <span class="hljs-number">1</span>] &lt;&lt; endl;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="四、代码讲解"><a href="#四、代码讲解" class="headerlink" title="四、代码讲解"></a>四、代码讲解</h2><h3 id="1-为什么-sum-0-0"><a href="#1-为什么-sum-0-0" class="headerlink" title="1. 为什么 sum[0] = 0"></a>1. 为什么 <code>sum[0] = 0</code></h3><p>这样写可以统一边界，方便计算</p>
+<h3 id="2-为什么区间和是-sum-r-sum-l-1"><a href="#2-为什么区间和是-sum-r-sum-l-1" class="headerlink" title="2. 为什么区间和是 sum[r] - sum[l - 1]"></a>2. 为什么区间和是 <code>sum[r] - sum[l - 1]</code></h3><p>因为：</p>
+<ul>
+<li><code>sum[r]</code> 表示从 <code>1</code> 到 <code>r</code> 的总和</li>
+<li><code>sum[l - 1]</code> 表示从 <code>1</code> 到 <code>l-1</code> 的总和</li>
+</ul>
+<p>两者相减，剩下的就是 <code>[l, r]</code> 这一段。</p>
+<h2 id="五、什么是差分"><a href="#五、什么是差分" class="headerlink" title="五、什么是差分"></a>五、什么是差分</h2><p>差分可以看成前缀和的“逆操作”</p>
+<p>如果数组 <code>a</code> 是原数组，那么差分数组 <code>d</code> 定义为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">d[i] = a[i] - a[i - 1]<br></code></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<p>原数组：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">1 3 6 10 15<br></code></pre></td></tr></table></figure>
+
+<p>差分数组：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">1 2 3 4 5<br></code></pre></td></tr></table></figure>
+
+<h2 id="六、差分有什么用"><a href="#六、差分有什么用" class="headerlink" title="六、差分有什么用"></a>六、差分有什么用</h2><p>差分特别适合处理“区间修改”</p>
+<p>例如要给区间 <code>[l, r]</code> 每个元素都加上 <code>c</code>，普通做法要一个一个改<br>但用差分，只需要：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">d[l] += c<br>d[r + 1] -= c<br></code></pre></td></tr></table></figure>
+
+<p>最后再还原原数组即可。</p>
+<h2 id="七、差分代码实现"><a href="#七、差分代码实现" class="headerlink" title="七、差分代码实现"></a>七、差分代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">int</span> n, m;<br>    cin &gt;&gt; n &gt;&gt; m;<br><br>    <span class="hljs-type">int</span> a[<span class="hljs-number">1005</span>], d[<span class="hljs-number">1005</span>] = &#123;<span class="hljs-number">0</span>&#125;;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>        cin &gt;&gt; a[i];<br>        d[i] = a[i] - a[i - <span class="hljs-number">1</span>];<br>    &#125;<br><br>    <span class="hljs-keyword">while</span> (m--) &#123;<br>        <span class="hljs-type">int</span> l, r, c;<br>        cin &gt;&gt; l &gt;&gt; r &gt;&gt; c;<br>        d[l] += c;<br>        d[r + <span class="hljs-number">1</span>] -= c;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>        d[i] += d[i - <span class="hljs-number">1</span>];<br>        cout &lt;&lt; d[i] &lt;&lt; <span class="hljs-string">&quot; &quot;</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="八、为什么差分能做区间修改"><a href="#八、为什么差分能做区间修改" class="headerlink" title="八、为什么差分能做区间修改"></a>八、为什么差分能做区间修改</h2><p>因为差分记录的是“变化量”</p>
+<p>如果在 <code>l</code> 位置加上 <code>c</code>，表示从这里开始整体提高。<br>如果在 <code>r + 1</code> 位置减去 <code>c</code>，表示从这里之后恢复原状</p>
+<p>于是 <code>[l, r]</code> 这段区间就自然都加上了 <code>c</code></p>
+<h2 id="九、前缀和与差分的关系"><a href="#九、前缀和与差分的关系" class="headerlink" title="九、前缀和与差分的关系"></a>九、前缀和与差分的关系</h2><p>可以简单理解为：</p>
+<ul>
+<li>前缀和：让查询更快</li>
+<li>差分：让修改更快</li>
+</ul>
+<p>一个偏向“快速求值”，一个偏向“快速更新”</p>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2026/03/20/C-%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E4%B9%8B%E5%B9%B6%E6%9F%A5%E9%9B%86/">← 下一篇 C++基础算法之并查集</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/03/20/%E6%95%B0%E8%AE%BA%E4%B8%8E%E7%AE%97%E6%B3%95%E5%BA%94%E7%94%A8%E4%B9%8B%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97%E7%AE%97%E6%B3%95/">数论与算法应用之欧几里得算法 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">与猫为邻</a></h1><div id="description"><p></p></div><div id="social-links"><a class="social" target="_blank" rel="noopener" href="https://github.com/YuMaoWeiLin"><i class="fab fa-github" alt="GitHub"></i></a></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E5%89%8D%E7%BC%80%E5%92%8C"><span class="toc-number">1.</span> <span class="toc-text">一、什么是前缀和</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%89%8D%E7%BC%80%E5%92%8C%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">二、前缀和有什么用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%89%8D%E7%BC%80%E5%92%8C%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">三、前缀和代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3"><span class="toc-number">4.</span> <span class="toc-text">四、代码讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88-sum-0-0"><span class="toc-number">4.1.</span> <span class="toc-text">1. 为什么 sum[0] &#x3D; 0</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8C%BA%E9%97%B4%E5%92%8C%E6%98%AF-sum-r-sum-l-1"><span class="toc-number">4.2.</span> <span class="toc-text">2. 为什么区间和是 sum[r] - sum[l - 1]</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E5%B7%AE%E5%88%86"><span class="toc-number">5.</span> <span class="toc-text">五、什么是差分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%B7%AE%E5%88%86%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8"><span class="toc-number">6.</span> <span class="toc-text">六、差分有什么用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%B7%AE%E5%88%86%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">7.</span> <span class="toc-text">七、差分代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%B7%AE%E5%88%86%E8%83%BD%E5%81%9A%E5%8C%BA%E9%97%B4%E4%BF%AE%E6%94%B9"><span class="toc-number">8.</span> <span class="toc-text">八、为什么差分能做区间修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">9.</span> <span class="toc-text">九、前缀和与差分的关系</span></a></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="/js/music-player.js"></script><script defer src="/js/waifu-interact.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"https://cdn.jsdelivr.net/npm/live2d-widget-model-haru@1.0.5/02/assets/haru02.model.json"},"display":{"position":"left","width":140,"height":280,"hOffset":10,"vOffset":-10},"mobile":{"show":false},"react":{"opacityDefault":0.9,"opacityOnHover":1}});</script></body></html>

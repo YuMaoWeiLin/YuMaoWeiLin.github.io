@@ -1,0 +1,124 @@
+<!DOCTYPE html><html lang="en" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>C++基础算法之并查集 | 与猫为邻的小站</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.ttf");
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":15,"search":{"preload":false,"activeHolder":"键入以继续","blurHolder":"数据检索","noResult":"无 $0 相关数据"},"code":{"codeInfo":"$0 - $1 行","copy":"复制"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><style defer src="/css/music-player.css"></style><link rel="stylesheet" href="/css/music-player.css"><style defer src="/css/waifu-interact.css"></style><link rel="stylesheet" href="/css/waifu-interact.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: '确认'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/links/"><span class="navItemTitle">Link</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>C++基础算法之并查集</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2026-03-20T04:15:00.000Z" id="date"> 2026-03-20</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2026-03-20T12:30:18.267Z" id="updated"> 2026-03-20</time></div></span></div></div><hr><div id="post-content"><p>并查集是一种非常经典的数据结构，英文常叫 <strong>Union-Find</strong>。<br>它主要用于处理这类问题：</p>
+<p><strong>某两个元素是否属于同一个集合。</strong></p>
+<span id="more"></span>
+
+<h2 id="一、并查集解决什么问题"><a href="#一、并查集解决什么问题" class="headerlink" title="一、并查集解决什么问题"></a>一、并查集解决什么问题</h2><p>并查集主要支持两个操作：</p>
+<h3 id="1-合并"><a href="#1-合并" class="headerlink" title="1. 合并"></a>1. 合并</h3><p>把两个元素所在的集合合并成一个集合</p>
+<h3 id="2-查询"><a href="#2-查询" class="headerlink" title="2. 查询"></a>2. 查询</h3><p>判断两个元素是否属于同一个集合</p>
+<p>所以它非常适合处理“动态连通性”问题</p>
+<h2 id="二、并查集的核心思想"><a href="#二、并查集的核心思想" class="headerlink" title="二、并查集的核心思想"></a>二、并查集的核心思想</h2><p>并查集的实现方式很巧妙</p>
+<p>它把每个集合看成一棵树，每个节点记录它的“父亲”<br>如果某个节点是根节点，那么它的父亲就是自己</p>
+<p>这样，一个集合就对应一棵树。<br>同一棵树里的元素，说明属于同一个集合</p>
+<h2 id="三、初始化"><a href="#三、初始化" class="headerlink" title="三、初始化"></a>三、初始化</h2><p>一开始，每个元素单独属于一个集合</p>
+<p>所以：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp">fa[i] = i;<br></code></pre></td></tr></table></figure>
+
+<p>意思是：每个人一开始都是自己的老大</p>
+<h2 id="四、查找操作-find"><a href="#四、查找操作-find" class="headerlink" title="四、查找操作 find"></a>四、查找操作 <code>find</code></h2><p><code>find(x)</code> 的作用是找到 <code>x</code> 所在集合的根节点</p>
+<p>如果两个元素的根节点相同，就说明它们属于同一个集合</p>
+<h2 id="五、合并操作-union"><a href="#五、合并操作-union" class="headerlink" title="五、合并操作 union"></a>五、合并操作 <code>union</code></h2><p>如果要把 <code>x</code> 和 <code>y</code> 所在集合合并，只需要：</p>
+<ul>
+<li>找到 <code>x</code> 的根</li>
+<li>找到 <code>y</code> 的根</li>
+<li>让其中一个根指向另一个根</li>
+</ul>
+<h2 id="六、基础代码"><a href="#六、基础代码" class="headerlink" title="六、基础代码"></a>六、基础代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">int</span> fa[<span class="hljs-number">1005</span>];<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (fa[x] == x) <span class="hljs-keyword">return</span> x;<br>    <span class="hljs-keyword">return</span> fa[x] = <span class="hljs-built_in">find</span>(fa[x]);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">merge</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span> </span>&#123;<br>    <span class="hljs-type">int</span> fx = <span class="hljs-built_in">find</span>(x);<br>    <span class="hljs-type">int</span> fy = <span class="hljs-built_in">find</span>(y);<br>    <span class="hljs-keyword">if</span> (fx != fy) &#123;<br>        fa[fx] = fy;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">int</span> n, m;<br>    cin &gt;&gt; n &gt;&gt; m;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>        fa[i] = i;<br>    &#125;<br><br>    <span class="hljs-keyword">while</span> (m--) &#123;<br>        <span class="hljs-type">int</span> op, x, y;<br>        cin &gt;&gt; op &gt;&gt; x &gt;&gt; y;<br><br>        <span class="hljs-keyword">if</span> (op == <span class="hljs-number">1</span>) &#123;<br>            <span class="hljs-built_in">merge</span>(x, y);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">find</span>(x) == <span class="hljs-built_in">find</span>(y)) cout &lt;&lt; <span class="hljs-string">&quot;Yes&quot;</span> &lt;&lt; endl;<br>            <span class="hljs-keyword">else</span> cout &lt;&lt; <span class="hljs-string">&quot;No&quot;</span> &lt;&lt; endl;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="七、代码讲解"><a href="#七、代码讲解" class="headerlink" title="七、代码讲解"></a>七、代码讲解</h2><h3 id="1-find-x-是什么"><a href="#1-find-x-是什么" class="headerlink" title="1. find(x) 是什么"></a>1. <code>find(x)</code> 是什么</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (fa[x] == x) <span class="hljs-keyword">return</span> x;<br>    <span class="hljs-keyword">return</span> fa[x] = <span class="hljs-built_in">find</span>(fa[x]);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这段代码的意思是：</p>
+<ul>
+<li>如果 <code>x</code> 已经是根，就返回自己</li>
+<li>否则递归往上找根节点</li>
+</ul>
+<p>这里还做了一个重要优化：<strong>路径压缩</strong></p>
+<h3 id="2-什么是路径压缩"><a href="#2-什么是路径压缩" class="headerlink" title="2. 什么是路径压缩"></a>2. 什么是路径压缩</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp">fa[x] = <span class="hljs-built_in">find</span>(fa[x]);<br></code></pre></td></tr></table></figure>
+
+<p>意思是：<br>在查找根节点的同时，把沿途节点直接挂到根上</p>
+<p>这样下次再查时就会更快</p>
+<h3 id="3-merge-x-y-的作用"><a href="#3-merge-x-y-的作用" class="headerlink" title="3. merge(x, y) 的作用"></a>3. <code>merge(x, y)</code> 的作用</h3><p>把 <code>x</code> 和 <code>y</code> 所在集合合并：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp">fa[fx] = fy;<br></code></pre></td></tr></table></figure>
+
+<p>前提是它们原本不在同一个集合</p>
+<h2 id="八、并查集的典型应用"><a href="#八、并查集的典型应用" class="headerlink" title="八、并查集的典型应用"></a>八、并查集的典型应用</h2><p>并查集常见应用有：</p>
+<ul>
+<li>判断图是否连通</li>
+<li>统计连通块数量</li>
+<li>最小生成树中的 Kruskal 算法</li>
+<li>朋友关系、亲属关系</li>
+<li>网络连通性问题</li>
+</ul>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2026/03/20/%E6%95%B0%E8%AE%BA%E4%B8%8E%E7%AE%97%E6%B3%95%E5%BA%94%E7%94%A8%E4%B9%8B%E5%BF%AB%E9%80%9F%E5%B9%82/">← 下一篇 数论与算法应用之快速幂</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/03/20/C-%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E4%B9%8B%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86/">C++基础算法之前缀和与差分 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">与猫为邻</a></h1><div id="description"><p></p></div><div id="social-links"><a class="social" target="_blank" rel="noopener" href="https://github.com/YuMaoWeiLin"><i class="fab fa-github" alt="GitHub"></i></a></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%B9%B6%E6%9F%A5%E9%9B%86%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">一、并查集解决什么问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%90%88%E5%B9%B6"><span class="toc-number">1.1.</span> <span class="toc-text">1. 合并</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.2.</span> <span class="toc-text">2. 查询</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%B9%B6%E6%9F%A5%E9%9B%86%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="toc-number">2.</span> <span class="toc-text">二、并查集的核心思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">三、初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%9F%A5%E6%89%BE%E6%93%8D%E4%BD%9C-find"><span class="toc-number">4.</span> <span class="toc-text">四、查找操作 find</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%90%88%E5%B9%B6%E6%93%8D%E4%BD%9C-union"><span class="toc-number">5.</span> <span class="toc-text">五、合并操作 union</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%9F%BA%E7%A1%80%E4%BB%A3%E7%A0%81"><span class="toc-number">6.</span> <span class="toc-text">六、基础代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3"><span class="toc-number">7.</span> <span class="toc-text">七、代码讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-find-x-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">7.1.</span> <span class="toc-text">1. find(x) 是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BB%80%E4%B9%88%E6%98%AF%E8%B7%AF%E5%BE%84%E5%8E%8B%E7%BC%A9"><span class="toc-number">7.2.</span> <span class="toc-text">2. 什么是路径压缩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-merge-x-y-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">7.3.</span> <span class="toc-text">3. merge(x, y) 的作用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E5%B9%B6%E6%9F%A5%E9%9B%86%E7%9A%84%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8"><span class="toc-number">8.</span> <span class="toc-text">八、并查集的典型应用</span></a></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="/js/music-player.js"></script><script defer src="/js/waifu-interact.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"https://cdn.jsdelivr.net/npm/live2d-widget-model-haru@1.0.5/02/assets/haru02.model.json"},"display":{"position":"left","width":140,"height":280,"hOffset":10,"vOffset":-10},"mobile":{"show":false},"react":{"opacityDefault":0.9,"opacityOnHover":1}});</script></body></html>
