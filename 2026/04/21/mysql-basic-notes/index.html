@@ -1,0 +1,274 @@
+<!DOCTYPE html><html lang="en" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MySQL 基础操作学习笔记 | 与猫为邻的小站</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.ttf");
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":15,"search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><style defer src="/css/music-player.css"></style><link rel="stylesheet" href="/css/music-player.css"><style defer src="/css/waifu-interact.css"></style><link rel="stylesheet" href="/css/waifu-interact.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: 'confirm'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/links/"><span class="navItemTitle">Link</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>MySQL 基础操作学习笔记</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2026-04-21T11:30:00.000Z" id="date"> 2026-04-21</time></div></span><br><span>Last Update: <div class="control"><time datetime="2026-04-21T12:21:47.901Z" id="updated"> 2026-04-21</time></div></span></div></div><hr><div id="post-content"><p>在最近的 MySQL 学习中，我把最常见、最基础的一批操作重新整理了一遍。相比单纯记命令，我更想弄清楚每条语句的<strong>作用、适用场景和核心理解</strong>。</p>
+<p>这篇笔记主要覆盖以下内容：</p>
+<ul>
+<li>数据库与表</li>
+<li>增删改查</li>
+<li>条件筛选与排序</li>
+<li>NULL 的判断</li>
+<li>表结构修改</li>
+<li>常用聚合函数</li>
+<li>多表查询与结果拼接</li>
+</ul>
+<span id="more"></span>
+
+<blockquote>
+<p>适合刚开始学习 MySQL 的同学快速复习。<br>建议学习顺序：先理解“库、表、列、行”，再记 <code>SELECT / INSERT / UPDATE / DELETE</code>，最后再补 <code>JOIN</code> 和 <code>UNION</code>。</p>
+</blockquote>
+<hr>
+<h2 id="一、数据库与表"><a href="#一、数据库与表" class="headerlink" title="一、数据库与表"></a>一、数据库与表</h2><p>数据库可以理解成一个大仓库，表就是仓库里的不同分类区域。学习 MySQL 时，先把“数据库”和“表”的概念分清楚，后面的命令会更容易理解。</p>
+<h3 id="1-创建数据库"><a href="#1-创建数据库" class="headerlink" title="1. 创建数据库"></a>1. 创建数据库</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> DATABASE testdb;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 新建一个数据库。<br><strong>理解：</strong> 数据库就是存放数据的大仓库。</p>
+<h3 id="2-使用数据库"><a href="#2-使用数据库" class="headerlink" title="2. 使用数据库"></a>2. 使用数据库</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">USE testdb;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 进入指定数据库。<br><strong>提示：</strong> 如果看到 <code>Database changed</code>，说明切换成功。</p>
+<h3 id="3-创建表"><a href="#3-创建表" class="headerlink" title="3. 创建表"></a>3. 创建表</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE TABLE</span> students (<br>    id <span class="hljs-type">INT</span> <span class="hljs-keyword">PRIMARY KEY</span> AUTO_INCREMENT,<br>    name <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT NULL</span>,<br>    age <span class="hljs-type">INT</span>,<br>    major <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">100</span>)<br>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 创建 <code>students</code> 表，并定义每一列的字段信息。</p>
+<p><strong>几个关键点：</strong></p>
+<ul>
+<li><code>PRIMARY KEY</code>：主键，要求唯一</li>
+<li><code>AUTO_INCREMENT</code>：自动编号，通常搭配主键使用</li>
+<li><code>NOT NULL</code>：该列不能为空</li>
+<li><code>VARCHAR(50)</code>：可变长度字符串，最大长度为 50</li>
+</ul>
+<h3 id="4-查看表结构"><a href="#4-查看表结构" class="headerlink" title="4. 查看表结构"></a>4. 查看表结构</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">DESC</span> students;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 查看表中各列的结构信息。<br><strong>重点关注：</strong></p>
+<ul>
+<li><code>Field</code>：列名</li>
+<li><code>Type</code>：数据类型</li>
+<li><code>Key</code>：是否为主键</li>
+</ul>
+<h3 id="5-查看当前数据库中的表"><a href="#5-查看当前数据库中的表" class="headerlink" title="5. 查看当前数据库中的表"></a>5. 查看当前数据库中的表</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SHOW</span> TABLES;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 查看数据库里已经存在的所有表。</p>
+<hr>
+<h2 id="二、数据操作：增删改查"><a href="#二、数据操作：增删改查" class="headerlink" title="二、数据操作：增删改查"></a>二、数据操作：增删改查</h2><p>增删改查是数据库中最核心的一部分，也是最常使用的内容。</p>
+<h3 id="1-插入数据"><a href="#1-插入数据" class="headerlink" title="1. 插入数据"></a>1. 插入数据</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">INSERT INTO</span> students (name, age, major)<br><span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;张三&#x27;</span>, <span class="hljs-number">19</span>, <span class="hljs-string">&#x27;计算机科学与技术&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 插入一整行数据。<br><strong>要点：</strong> 列的顺序要和后面的值一一对应。</p>
+<h3 id="2-查询所有数据"><a href="#2-查询所有数据" class="headerlink" title="2. 查询所有数据"></a>2. 查询所有数据</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> students;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 查询表中的全部数据。</p>
+<h3 id="3-条件查询"><a href="#3-条件查询" class="headerlink" title="3. 条件查询"></a>3. 条件查询</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> students <span class="hljs-keyword">WHERE</span> age <span class="hljs-operator">&gt;</span> <span class="hljs-number">18</span>;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 按条件筛选符合要求的数据。</p>
+<h3 id="4-多条件查询"><a href="#4-多条件查询" class="headerlink" title="4. 多条件查询"></a>4. 多条件查询</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> students<br><span class="hljs-keyword">WHERE</span> age <span class="hljs-operator">&gt;</span> <span class="hljs-number">18</span> <span class="hljs-keyword">AND</span> major <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;人工智能&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><strong>要点：</strong></p>
+<ul>
+<li><code>AND</code>：并且</li>
+<li><code>OR</code>：或者</li>
+</ul>
+<h3 id="5-修改数据"><a href="#5-修改数据" class="headerlink" title="5. 修改数据"></a>5. 修改数据</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">UPDATE</span> students<br><span class="hljs-keyword">SET</span> age <span class="hljs-operator">=</span> <span class="hljs-number">21</span><br><span class="hljs-keyword">WHERE</span> name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;李四&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 修改符合条件的记录。<br><strong>注意：</strong> <code>UPDATE</code> 一般必须带 <code>WHERE</code>，否则可能把整张表都改掉。</p>
+<h3 id="6-删除数据"><a href="#6-删除数据" class="headerlink" title="6. 删除数据"></a>6. 删除数据</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> students<br><span class="hljs-keyword">WHERE</span> name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;王五&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 删除符合条件的记录。<br><strong>注意：</strong> 不加 <code>WHERE</code>，可能会把整张表的数据全部删掉。</p>
+<h3 id="7-清空表"><a href="#7-清空表" class="headerlink" title="7. 清空表"></a>7. 清空表</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">TRUNCATE</span> <span class="hljs-keyword">TABLE</span> students;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong></p>
+<ul>
+<li>清空整张表的数据</li>
+<li>重置自增主键</li>
+</ul>
+<p><strong>区别：</strong> <code>TRUNCATE</code> 更像“整表清空”，而 <code>DELETE</code> 更适合按条件删除。</p>
+<hr>
+<h2 id="三、查询进阶"><a href="#三、查询进阶" class="headerlink" title="三、查询进阶"></a>三、查询进阶</h2><p>在掌握最基本的查询后，还需要学会模糊查询、排序和限制条数。</p>
+<h3 id="1-模糊查询"><a href="#1-模糊查询" class="headerlink" title="1. 模糊查询"></a>1. 模糊查询</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> students<br><span class="hljs-keyword">WHERE</span> name <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;张%&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 查询姓名以“张”开头的数据。<br><strong>要点：</strong> <code>%</code> 表示任意长度的任意字符。</p>
+<h3 id="2-排序"><a href="#2-排序" class="headerlink" title="2. 排序"></a>2. 排序</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> students <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> age;<br><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> students <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> age <span class="hljs-keyword">DESC</span>;<br></code></pre></td></tr></table></figure>
+
+<p><strong>要点：</strong></p>
+<ul>
+<li><code>ORDER BY age</code>：按年龄升序排序</li>
+<li><code>DESC</code>：降序排序</li>
+</ul>
+<h3 id="3-限制返回条数"><a href="#3-限制返回条数" class="headerlink" title="3. 限制返回条数"></a>3. 限制返回条数</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> students LIMIT <span class="hljs-number">2</span>;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 只返回前两条记录。<br><strong>应用：</strong> 适合测试查询结果，或者只想查看前几行数据时使用。</p>
+<hr>
+<h2 id="四、NULL（空值）"><a href="#四、NULL（空值）" class="headerlink" title="四、NULL（空值）"></a>四、NULL（空值）</h2><p>在 MySQL 中，<code>NULL</code> 表示“没有值”或“未知值”，它和普通的空字符串不是一回事。</p>
+<h3 id="1-查询空值"><a href="#1-查询空值" class="headerlink" title="1. 查询空值"></a>1. 查询空值</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> students <span class="hljs-keyword">WHERE</span> major <span class="hljs-keyword">IS</span> <span class="hljs-keyword">NULL</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-查询非空值"><a href="#2-查询非空值" class="headerlink" title="2. 查询非空值"></a>2. 查询非空值</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> students <span class="hljs-keyword">WHERE</span> major <span class="hljs-keyword">IS</span> <span class="hljs-keyword">NOT NULL</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-容易出错的地方"><a href="#3-容易出错的地方" class="headerlink" title="3. 容易出错的地方"></a>3. 容易出错的地方</h3><p>下面这种写法是错误的：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">major <span class="hljs-operator">=</span> <span class="hljs-keyword">NULL</span><br></code></pre></td></tr></table></figure>
+
+<p>判断空值必须使用：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">IS</span> <span class="hljs-keyword">NULL</span><br><span class="hljs-keyword">IS</span> <span class="hljs-keyword">NOT NULL</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="五、表结构修改"><a href="#五、表结构修改" class="headerlink" title="五、表结构修改"></a>五、表结构修改</h2><p>有时候表建立之后，需求会变化，这时就要对表结构进行修改。</p>
+<h3 id="1-新增列"><a href="#1-新增列" class="headerlink" title="1. 新增列"></a>1. 新增列</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER TABLE</span> students <span class="hljs-keyword">ADD</span> gender <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">10</span>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 在表中新增 <code>gender</code> 这一列。</p>
+<h3 id="2-删除列"><a href="#2-删除列" class="headerlink" title="2. 删除列"></a>2. 删除列</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER TABLE</span> students <span class="hljs-keyword">DROP</span> <span class="hljs-keyword">COLUMN</span> gender;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 删除指定列。</p>
+<h3 id="3-更新某一列的数据"><a href="#3-更新某一列的数据" class="headerlink" title="3. 更新某一列的数据"></a>3. 更新某一列的数据</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">UPDATE</span> students<br><span class="hljs-keyword">SET</span> gender <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;男&#x27;</span><br><span class="hljs-keyword">WHERE</span> name <span class="hljs-keyword">IN</span> (<span class="hljs-string">&#x27;张三&#x27;</span>,<span class="hljs-string">&#x27;李四&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 把符合条件的多行数据统一更新。</p>
+<h3 id="4-IN-的使用"><a href="#4-IN-的使用" class="headerlink" title="4. IN 的使用"></a>4. <code>IN</code> 的使用</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> students<br><span class="hljs-keyword">WHERE</span> name <span class="hljs-keyword">IN</span> (<span class="hljs-string">&#x27;张三&#x27;</span>,<span class="hljs-string">&#x27;李四&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>理解：</strong> <code>IN</code> 可以理解成“在这些值里面”。<br>当条件较多时，比连续写多个 <code>OR</code> 更清晰。</p>
+<hr>
+<h2 id="六、常用函数"><a href="#六、常用函数" class="headerlink" title="六、常用函数"></a>六、常用函数</h2><p>聚合函数常用于做统计分析，是 MySQL 中非常高频的一类操作。</p>
+<h3 id="1-统计总数"><a href="#1-统计总数" class="headerlink" title="1. 统计总数"></a>1. 统计总数</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">FROM</span> students;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-最大值"><a href="#2-最大值" class="headerlink" title="2. 最大值"></a>2. 最大值</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">MAX</span>(age) <span class="hljs-keyword">FROM</span> students;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-最小值"><a href="#3-最小值" class="headerlink" title="3. 最小值"></a>3. 最小值</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">MIN</span>(age) <span class="hljs-keyword">FROM</span> students;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-平均值"><a href="#4-平均值" class="headerlink" title="4. 平均值"></a>4. 平均值</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">AVG</span>(age) <span class="hljs-keyword">FROM</span> students;<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-这一组函数的理解"><a href="#5-这一组函数的理解" class="headerlink" title="5. 这一组函数的理解"></a>5. 这一组函数的理解</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>COUNT(*)</code></td>
+<td>统计记录数量</td>
+</tr>
+<tr>
+<td><code>MAX()</code></td>
+<td>求最大值</td>
+</tr>
+<tr>
+<td><code>MIN()</code></td>
+<td>求最小值</td>
+</tr>
+<tr>
+<td><code>AVG()</code></td>
+<td>求平均值</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="七、多表操作"><a href="#七、多表操作" class="headerlink" title="七、多表操作"></a>七、多表操作</h2><p>学习到这里，就不能只看单表了。实际开发中，经常需要把多张表联系起来一起查询。</p>
+<h3 id="1-JOIN：横向拼接数据"><a href="#1-JOIN：横向拼接数据" class="headerlink" title="1. JOIN：横向拼接数据"></a>1. <code>JOIN</code>：横向拼接数据</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> students.name, scores.score<br><span class="hljs-keyword">FROM</span> students<br><span class="hljs-keyword">JOIN</span> scores<br><span class="hljs-keyword">ON</span> students.id <span class="hljs-operator">=</span> scores.student_id;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 根据关联字段，把两张表的数据拼接起来。</p>
+<p><strong>本质理解：</strong></p>
+<ul>
+<li><code>students.id</code> 和 <code>scores.student_id</code> 是对应关系</li>
+<li><code>JOIN</code> 就是在找“谁和谁是一一对应的”</li>
+<li>最终结果是把不同表里的列放到同一行中展示</li>
+</ul>
+<hr>
+<h2 id="八、结果拼接"><a href="#八、结果拼接" class="headerlink" title="八、结果拼接"></a>八、结果拼接</h2><p>除了把表横着拼，还可以把查询结果竖着拼。</p>
+<h3 id="1-UNION"><a href="#1-UNION" class="headerlink" title="1. UNION"></a>1. <code>UNION</code></h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> name <span class="hljs-keyword">FROM</span> students<br><span class="hljs-keyword">UNION</span><br><span class="hljs-keyword">SELECT</span> major <span class="hljs-keyword">FROM</span> students;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 纵向合并两个查询结果，并自动去重。</p>
+<h3 id="2-UNION-ALL"><a href="#2-UNION-ALL" class="headerlink" title="2. UNION ALL"></a>2. <code>UNION ALL</code></h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> name <span class="hljs-keyword">FROM</span> students<br><span class="hljs-keyword">UNION</span> <span class="hljs-keyword">ALL</span><br><span class="hljs-keyword">SELECT</span> major <span class="hljs-keyword">FROM</span> students;<br></code></pre></td></tr></table></figure>
+
+<p><strong>作用：</strong> 纵向合并两个查询结果，但不去重。</p>
+<p><strong>区别：</strong></p>
+<ul>
+<li><code>UNION</code>：去重</li>
+<li><code>UNION ALL</code>：不去重，速度通常更快</li>
+</ul>
+<hr>
+<h2 id="九、核心理解总结"><a href="#九、核心理解总结" class="headerlink" title="九、核心理解总结"></a>九、核心理解总结</h2><p>MySQL 入门阶段，最重要的不是死记命令，而是先把每条命令背后的含义弄清楚</p>
+<h3 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a>1. 基本概念</h3><ul>
+<li><strong>列</strong>：竖着的一栏，也叫字段</li>
+<li><strong>行</strong>：横着的一条，也叫记录</li>
+</ul>
+<h3 id="2-常用命令的本质"><a href="#2-常用命令的本质" class="headerlink" title="2. 常用命令的本质"></a>2. 常用命令的本质</h3><ul>
+<li><code>INSERT</code>：插入一整行数据</li>
+<li><code>SELECT</code>：查询数据</li>
+<li><code>WHERE</code>：加条件筛选</li>
+<li><code>ORDER BY</code>：排序</li>
+<li><code>LIMIT</code>：限制返回条数</li>
+<li><code>JOIN</code>：横向拼接多表数据</li>
+<li><code>UNION</code>：纵向拼接查询结果</li>
+</ul>
+<h3 id="3-我的学习体会"><a href="#3-我的学习体会" class="headerlink" title="3. 我的学习体会"></a>3. 我的学习体会</h3><p>刚开始学 MySQL 时，最容易混淆的地方是：</p>
+<ul>
+<li>表结构和表数据的区别</li>
+<li><code>DELETE</code> 和 <code>TRUNCATE</code> 的区别</li>
+<li><code>NULL</code> 不能用 <code>=</code> 判断</li>
+<li><code>JOIN</code> 是横向拼表，<code>UNION</code> 是纵向拼结果</li>
+</ul>
+<p>把这些关键点理顺之后，再回头看前面的语句，就会清楚很多。</p>
+<hr>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages" style="justify-content: flex-end"><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/04/14/Linux%20%E4%B8%8B%E7%9A%84%20MySQL%20%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86%E4%B8%8E%E7%94%A8%E6%88%B7%E8%AE%BE%E7%BD%AE/"> Prev →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="To Catalog">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">与猫为邻</a></h1><div id="description"><p></p></div><div id="social-links"><a class="social" target="_blank" rel="noopener" href="https://github.com/YuMaoWeiLin"><i class="fab fa-github" alt="GitHub"></i></a></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E8%A1%A8"><span class="toc-number">1.</span> <span class="toc-text">一、数据库与表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.1.</span> <span class="toc-text">1. 创建数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.2.</span> <span class="toc-text">2. 使用数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%88%9B%E5%BB%BA%E8%A1%A8"><span class="toc-number">1.3.</span> <span class="toc-text">3. 创建表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%9F%A5%E7%9C%8B%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="toc-number">1.4.</span> <span class="toc-text">4. 查看表结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E8%A1%A8"><span class="toc-number">1.5.</span> <span class="toc-text">5. 查看当前数据库中的表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C%EF%BC%9A%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5"><span class="toc-number">2.</span> <span class="toc-text">二、数据操作：增删改查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="toc-number">2.1.</span> <span class="toc-text">1. 插入数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9F%A5%E8%AF%A2%E6%89%80%E6%9C%89%E6%95%B0%E6%8D%AE"><span class="toc-number">2.2.</span> <span class="toc-text">2. 查询所有数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2"><span class="toc-number">2.3.</span> <span class="toc-text">3. 条件查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%A4%9A%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2"><span class="toc-number">2.4.</span> <span class="toc-text">4. 多条件查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE"><span class="toc-number">2.5.</span> <span class="toc-text">5. 修改数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE"><span class="toc-number">2.6.</span> <span class="toc-text">6. 删除数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E6%B8%85%E7%A9%BA%E8%A1%A8"><span class="toc-number">2.7.</span> <span class="toc-text">7. 清空表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%9F%A5%E8%AF%A2%E8%BF%9B%E9%98%B6"><span class="toc-number">3.</span> <span class="toc-text">三、查询进阶</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2"><span class="toc-number">3.1.</span> <span class="toc-text">1. 模糊查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8E%92%E5%BA%8F"><span class="toc-number">3.2.</span> <span class="toc-text">2. 排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%99%90%E5%88%B6%E8%BF%94%E5%9B%9E%E6%9D%A1%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">3. 限制返回条数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81NULL%EF%BC%88%E7%A9%BA%E5%80%BC%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">四、NULL（空值）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%9F%A5%E8%AF%A2%E7%A9%BA%E5%80%BC"><span class="toc-number">4.1.</span> <span class="toc-text">1. 查询空值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9F%A5%E8%AF%A2%E9%9D%9E%E7%A9%BA%E5%80%BC"><span class="toc-number">4.2.</span> <span class="toc-text">2. 查询非空值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%AE%B9%E6%98%93%E5%87%BA%E9%94%99%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="toc-number">4.3.</span> <span class="toc-text">3. 容易出错的地方</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E8%A1%A8%E7%BB%93%E6%9E%84%E4%BF%AE%E6%94%B9"><span class="toc-number">5.</span> <span class="toc-text">五、表结构修改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%96%B0%E5%A2%9E%E5%88%97"><span class="toc-number">5.1.</span> <span class="toc-text">1. 新增列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%88%A0%E9%99%A4%E5%88%97"><span class="toc-number">5.2.</span> <span class="toc-text">2. 删除列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9B%B4%E6%96%B0%E6%9F%90%E4%B8%80%E5%88%97%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="toc-number">5.3.</span> <span class="toc-text">3. 更新某一列的数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-IN-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">5.4.</span> <span class="toc-text">4. IN 的使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="toc-number">6.</span> <span class="toc-text">六、常用函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%BB%9F%E8%AE%A1%E6%80%BB%E6%95%B0"><span class="toc-number">6.1.</span> <span class="toc-text">1. 统计总数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9C%80%E5%A4%A7%E5%80%BC"><span class="toc-number">6.2.</span> <span class="toc-text">2. 最大值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9C%80%E5%B0%8F%E5%80%BC"><span class="toc-number">6.3.</span> <span class="toc-text">3. 最小值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%B9%B3%E5%9D%87%E5%80%BC"><span class="toc-number">6.4.</span> <span class="toc-text">4. 平均值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E8%BF%99%E4%B8%80%E7%BB%84%E5%87%BD%E6%95%B0%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-number">6.5.</span> <span class="toc-text">5. 这一组函数的理解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%A4%9A%E8%A1%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">7.</span> <span class="toc-text">七、多表操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-JOIN%EF%BC%9A%E6%A8%AA%E5%90%91%E6%8B%BC%E6%8E%A5%E6%95%B0%E6%8D%AE"><span class="toc-number">7.1.</span> <span class="toc-text">1. JOIN：横向拼接数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E7%BB%93%E6%9E%9C%E6%8B%BC%E6%8E%A5"><span class="toc-number">8.</span> <span class="toc-text">八、结果拼接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-UNION"><span class="toc-number">8.1.</span> <span class="toc-text">1. UNION</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-UNION-ALL"><span class="toc-number">8.2.</span> <span class="toc-text">2. UNION ALL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E6%A0%B8%E5%BF%83%E7%90%86%E8%A7%A3%E6%80%BB%E7%BB%93"><span class="toc-number">9.</span> <span class="toc-text">九、核心理解总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">9.1.</span> <span class="toc-text">1. 基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="toc-number">9.2.</span> <span class="toc-text">2. 常用命令的本质</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%88%91%E7%9A%84%E5%AD%A6%E4%B9%A0%E4%BD%93%E4%BC%9A"><span class="toc-number">9.3.</span> <span class="toc-text">3. 我的学习体会</span></a></li></ol></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="/js/music-player.js"></script><script defer src="/js/waifu-interact.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"https://cdn.jsdelivr.net/npm/live2d-widget-model-haru@1.0.5/02/assets/haru02.model.json"},"display":{"position":"left","width":140,"height":280,"hOffset":10,"vOffset":-10},"mobile":{"show":false},"react":{"opacityDefault":0.9,"opacityOnHover":1}});</script></body></html>
