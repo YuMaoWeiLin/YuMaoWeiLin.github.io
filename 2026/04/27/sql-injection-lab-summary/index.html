@@ -1,0 +1,390 @@
+<!DOCTYPE html><html lang="en" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SQL 注入实验复盘：字符串拼接与参数化查询对照 | 与猫为邻的小站</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.ttf");
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":15,"search":{"preload":false,"activeHolder":"键入以继续","blurHolder":"数据检索","noResult":"无 $0 相关数据"},"code":{"codeInfo":"$0 - $1 行","copy":"复制"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><style defer src="/css/music-player.css"></style><link rel="stylesheet" href="/css/music-player.css"><style defer src="/css/waifu-interact.css"></style><link rel="stylesheet" href="/css/waifu-interact.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: '确认'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/links/"><span class="navItemTitle">Link</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>SQL 注入实验复盘：字符串拼接与参数化查询对照</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2026-04-27T13:30:00.000Z" id="date"> 2026-04-27</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2026-04-27T13:09:41.578Z" id="updated"> 2026-04-27</time></div></span></div></div><hr><div id="post-content"><h1 id="SQL-注入实验复盘：字符串拼接与参数化查询对照"><a href="#SQL-注入实验复盘：字符串拼接与参数化查询对照" class="headerlink" title="SQL 注入实验复盘：字符串拼接与参数化查询对照"></a>SQL 注入实验复盘：字符串拼接与参数化查询对照</h1><p>这次实验主要围绕一个核心问题展开：</p>
+<blockquote>
+<p>当程序把用户输入直接拼接进 SQL 语句时，用户输入就可能改变 SQL 原本的结构和逻辑，从而产生 SQL 注入风险。</p>
+</blockquote>
+<p>为了更直观地理解这个问题，我在同一台 CentOS 虚拟机上分别搭建了两个版本：</p>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>访问地址</th>
+<th>核心特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>安全版</td>
+<td><code>http://192.168.88.10:5000</code></td>
+<td>使用参数化查询</td>
+</tr>
+<tr>
+<td>不安全版</td>
+<td><code>http://192.168.88.10:5001</code></td>
+<td>使用字符串拼接 SQL</td>
+</tr>
+</tbody></table>
+<span id="more"></span>
+
+<hr>
+<h2 id="一、实验目标"><a href="#一、实验目标" class="headerlink" title="一、实验目标"></a>一、实验目标</h2><p>本次实验主要验证两个问题：</p>
+<ol>
+<li>为什么字符串拼接 SQL 会产生 SQL 注入风险</li>
+<li>为什么参数化查询可以防止这类问题</li>
+</ol>
+<p>最终目标不是单纯地“登录成功”，而是理解：</p>
+<ul>
+<li>SQL 注入是如何发生的</li>
+<li>用户输入为什么会影响 SQL 语句结构</li>
+<li>参数化查询为什么能够阻断这类风险</li>
+</ul>
+<hr>
+<h2 id="二、实验环境"><a href="#二、实验环境" class="headerlink" title="二、实验环境"></a>二、实验环境</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统环境</td>
+<td>CentOS 7 虚拟机</td>
+</tr>
+<tr>
+<td>远程工具</td>
+<td>FinalShell</td>
+</tr>
+<tr>
+<td>数据库</td>
+<td>MySQL 8.4.8</td>
+</tr>
+<tr>
+<td>后端环境</td>
+<td>Python 3.6.8 + Flask</td>
+</tr>
+<tr>
+<td>数据库连接库</td>
+<td>PyMySQL</td>
+</tr>
+<tr>
+<td>访问端</td>
+<td>Windows 浏览器</td>
+</tr>
+<tr>
+<td>虚拟机 IP</td>
+<td><code>192.168.88.10</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="三、数据库准备"><a href="#三、数据库准备" class="headerlink" title="三、数据库准备"></a>三、数据库准备</h2><p>首先创建实验数据库：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> DATABASE injlab;<br>USE injlab;<br></code></pre></td></tr></table></figure>
+
+<p>然后创建用户表：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE TABLE</span> users (<br>    id <span class="hljs-type">INT</span> <span class="hljs-keyword">PRIMARY KEY</span> AUTO_INCREMENT,<br>    username <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT NULL</span>,<br>    password <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT NULL</span>,<br>    role <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT NULL</span><br>);<br></code></pre></td></tr></table></figure>
+
+<p>这张表主要用于模拟一个简单的登录系统。</p>
+<p>字段含义如下：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>用户编号，主键，自增</td>
+</tr>
+<tr>
+<td><code>username</code></td>
+<td>用户名</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>密码</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td>用户角色</td>
+</tr>
+</tbody></table>
+<p>插入测试账号：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">INSERT INTO</span> users (username, password, role)<br><span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;admin&#x27;</span>, <span class="hljs-string">&#x27;admin123&#x27;</span>, <span class="hljs-string">&#x27;admin&#x27;</span>);<br><br><span class="hljs-keyword">INSERT INTO</span> users (username, password, role)<br><span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;zhangsan&#x27;</span>, <span class="hljs-string">&#x27;123456&#x27;</span>, <span class="hljs-string">&#x27;user&#x27;</span>);<br><br><span class="hljs-keyword">INSERT INTO</span> users (username, password, role)<br><span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;lisi&#x27;</span>, <span class="hljs-string">&#x27;abc123&#x27;</span>, <span class="hljs-string">&#x27;user&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>最终数据如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs text">+----+----------+----------+-------+<br>| id | username | password | role  |<br>+----+----------+----------+-------+<br>|  1 | admin    | admin123 | admin |<br>|  2 | zhangsan | 123456   | user  |<br>|  3 | lisi     | abc123   | user  |<br>+----+----------+----------+-------+<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="四、安全版程序"><a href="#四、安全版程序" class="headerlink" title="四、安全版程序"></a>四、安全版程序</h2><p>安全版文件位置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/root/sql_lab.py<br></code></pre></td></tr></table></figure>
+
+<p>运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python3 /root/sql_lab.py<br></code></pre></td></tr></table></figure>
+
+<p>访问地址：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">http://192.168.88.10:5000<br></code></pre></td></tr></table></figure>
+
+<p>安全版的核心代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">sql = <span class="hljs-string">&quot;SELECT * FROM users WHERE username=%s AND password=%s&quot;</span><br>cursor.execute(sql, (username, password))<br></code></pre></td></tr></table></figure>
+
+<p>这个版本的特点是：</p>
+<ul>
+<li>SQL 语句结构是固定的</li>
+<li>用户输入通过参数传入</li>
+<li>用户输入不会成为 SQL 语法的一部分</li>
+<li>即使输入中包含引号、注释符等特殊字符，也只会被当作普通数据处理</li>
+</ul>
+<hr>
+<h2 id="五、不安全版程序"><a href="#五、不安全版程序" class="headerlink" title="五、不安全版程序"></a>五、不安全版程序</h2><p>不安全版文件位置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/root/sql_lab_unsafe.py<br></code></pre></td></tr></table></figure>
+
+<p>运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python3 /root/sql_lab_unsafe.py<br></code></pre></td></tr></table></figure>
+
+<p>访问地址：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">http://192.168.88.10:5001<br></code></pre></td></tr></table></figure>
+
+<p>不安全版的核心代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">sql = <span class="hljs-string">&quot;SELECT * FROM users WHERE username = &#x27;&quot;</span> + username + <span class="hljs-string">&quot;&#x27; AND password = &#x27;&quot;</span> + password + <span class="hljs-string">&quot;&#x27;&quot;</span><br>cursor.execute(sql)<br></code></pre></td></tr></table></figure>
+
+<p>这个版本的问题在于：</p>
+<ul>
+<li>用户输入被直接拼接进 SQL 字符串</li>
+<li>用户输入和 SQL 语句结构混在了一起</li>
+<li>输入内容可能改变 SQL 原本的判断逻辑</li>
+</ul>
+<p>这也是 SQL 注入产生的关键原因。</p>
+<hr>
+<h2 id="六、正常登录测试"><a href="#六、正常登录测试" class="headerlink" title="六、正常登录测试"></a>六、正常登录测试</h2><p>正常输入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">用户名：admin<br>密码：admin123<br></code></pre></td></tr></table></figure>
+
+<p>不安全版中拼接出的 SQL 语句类似：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> users <span class="hljs-keyword">WHERE</span> username <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;admin&#x27;</span> <span class="hljs-keyword">AND</span> password <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;admin123&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>查询逻辑可以理解为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">用户名正确 AND 密码正确 → 登录成功<br></code></pre></td></tr></table></figure>
+
+<p>因此，输入正确账号和密码时，程序能够正常登录。</p>
+<hr>
+<h2 id="七、注入测试"><a href="#七、注入测试" class="headerlink" title="七、注入测试"></a>七、注入测试</h2><p>在不安全版中输入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">用户名：admin&#x27; #<br>密码：123<br></code></pre></td></tr></table></figure>
+
+<p>程序拼接后的 SQL 逻辑类似：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> users <span class="hljs-keyword">WHERE</span> username <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;admin&#x27;</span> #<span class="hljs-string">&#x27; AND password = &#x27;</span><span class="hljs-number">123</span><span class="hljs-string">&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>其中 <code>#</code> 在 MySQL 中表示注释。</p>
+<p>也就是说，<code>#</code> 后面的内容会被当作注释处理，原本的密码判断被注释掉了。</p>
+<p>原本的判断逻辑是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">username = admin<br>AND<br>password = admin123<br></code></pre></td></tr></table></figure>
+
+<p>注入后逻辑被改变为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">username = admin<br></code></pre></td></tr></table></figure>
+
+<p>这样即使密码输入错误，也可能绕过登录判断。</p>
+<hr>
+<h2 id="八、安全版对照测试"><a href="#八、安全版对照测试" class="headerlink" title="八、安全版对照测试"></a>八、安全版对照测试</h2><p>在安全版中使用同样的输入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">用户名：admin&#x27; #<br>密码：123<br></code></pre></td></tr></table></figure>
+
+<p>测试结果是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">用户名或密码错误<br></code></pre></td></tr></table></figure>
+
+<p>原因在于安全版使用的是参数化查询：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">cursor.execute(sql, (username, password))<br></code></pre></td></tr></table></figure>
+
+<p>这里的 <code>admin&#39; #</code> 不会被当成 SQL 语法，而是被当成一个普通字符串。</p>
+<p>数据库实际理解的是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">查找用户名真的等于 &quot;admin&#x27; #&quot; 的用户<br></code></pre></td></tr></table></figure>
+
+<p>由于表里没有这个用户，所以登录失败。</p>
+<hr>
+<h2 id="九、核心对比"><a href="#九、核心对比" class="headerlink" title="九、核心对比"></a>九、核心对比</h2><table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>不安全版</th>
+<th>安全版</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SQL 构造方式</td>
+<td>字符串拼接</td>
+<td>参数化查询</td>
+</tr>
+<tr>
+<td>用户输入角色</td>
+<td>可能成为 SQL 语法</td>
+<td>只作为普通数据</td>
+</tr>
+<tr>
+<td>SQL 结构</td>
+<td>可能被用户输入改变</td>
+<td>固定不变</td>
+</tr>
+<tr>
+<td>注入风险</td>
+<td>高</td>
+<td>低</td>
+</tr>
+<tr>
+<td>典型代码</td>
+<td><code>cursor.execute(sql)</code></td>
+<td><code>cursor.execute(sql, (username, password))</code></td>
+</tr>
+</tbody></table>
+<p>不安全版的本质是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">SQL = 固定语句 + 用户输入 + 固定语句<br></code></pre></td></tr></table></figure>
+
+<p>安全版的本质是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">SQL 结构固定，用户输入只是数据<br></code></pre></td></tr></table></figure>
+
+<p>这两句话基本就概括了本次实验的核心区别。</p>
+<hr>
+<h2 id="十、实验中解决的问题"><a href="#十、实验中解决的问题" class="headerlink" title="十、实验中解决的问题"></a>十、实验中解决的问题</h2><p>这次实验过程中并不是一次性完成的，中间也遇到了一些环境和操作问题。</p>
+<h3 id="1-Python-环境问题"><a href="#1-Python-环境问题" class="headerlink" title="1. Python 环境问题"></a>1. Python 环境问题</h3><p>最开始 CentOS 中只有：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">Python 2.7.5<br></code></pre></td></tr></table></figure>
+
+<p>后来安装 Python 3：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install -y python3<br></code></pre></td></tr></table></figure>
+
+<p>最终得到：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">Python 3.6.8<br></code></pre></td></tr></table></figure>
+
+<p>并安装依赖：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python3 -m pip install flask pymysql<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-vim-编辑混乱问题"><a href="#2-vim-编辑混乱问题" class="headerlink" title="2. vim 编辑混乱问题"></a>2. vim 编辑混乱问题</h3><p>在编辑代码时，曾经误进入 vim 的异常模式或可视块模式。</p>
+<p>后来使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pkill vim<br></code></pre></td></tr></table></figure>
+
+<p>退出异常状态，并改用下面这种方式一次性写入文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> &gt; /root/sql_lab.py &lt;&lt;<span class="hljs-string">&#x27;EOF&#x27;</span><br>...<br>EOF<br></code></pre></td></tr></table></figure>
+
+<p>对于刚开始在 Linux 里写实验代码的人来说，这种方式比频繁使用 vim 更稳。</p>
+<h3 id="3-Windows-浏览器无法访问虚拟机端口"><a href="#3-Windows-浏览器无法访问虚拟机端口" class="headerlink" title="3. Windows 浏览器无法访问虚拟机端口"></a>3. Windows 浏览器无法访问虚拟机端口</h3><p>最开始 Windows 浏览器无法访问虚拟机里的 Flask 服务，主要原因是 CentOS 防火墙没有放行端口。</p>
+<p>放行 <code>5001</code> 端口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">firewall-cmd --zone=public --add-port=5001/tcp --permanent<br>firewall-cmd --reload<br></code></pre></td></tr></table></figure>
+
+<p>必要时也可以临时关闭防火墙：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl stop firewalld<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-普通用户没有权限运行-root-目录文件"><a href="#4-普通用户没有权限运行-root-目录文件" class="headerlink" title="4. 普通用户没有权限运行 root 目录文件"></a>4. 普通用户没有权限运行 root 目录文件</h3><p>运行程序时遇到过：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">Permission denied<br></code></pre></td></tr></table></figure>
+
+<p>原因是普通用户不能读取 <code>/root/sql_lab.py</code>。</p>
+<p>解决方式是切换到 root 用户后运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">su -<br>python3 /root/sql_lab.py<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="十一、这次掌握的知识点"><a href="#十一、这次掌握的知识点" class="headerlink" title="十一、这次掌握的知识点"></a>十一、这次掌握的知识点</h2><h3 id="1-MySQL-方面"><a href="#1-MySQL-方面" class="headerlink" title="1. MySQL 方面"></a>1. MySQL 方面</h3><ul>
+<li><code>CREATE DATABASE</code></li>
+<li><code>USE</code></li>
+<li><code>CREATE TABLE</code></li>
+<li><code>INSERT INTO</code></li>
+<li><code>SELECT</code></li>
+<li><code>WHERE</code></li>
+<li><code>AND</code></li>
+<li><code>OR</code></li>
+<li><code>LIKE</code></li>
+<li><code>ORDER BY</code></li>
+<li><code>LIMIT</code></li>
+<li><code>JOIN</code></li>
+<li><code>UNION</code></li>
+</ul>
+<h3 id="2-Python-方面"><a href="#2-Python-方面" class="headerlink" title="2. Python 方面"></a>2. Python 方面</h3><ul>
+<li><code>import</code> 导入模块</li>
+<li>Flask Web 程序</li>
+<li>HTML 字符串</li>
+<li>表单提交</li>
+<li><code>request.form</code> 获取输入</li>
+<li><code>def</code> 定义函数</li>
+<li><code>if</code> 条件判断</li>
+<li>MySQL 连接</li>
+<li><code>cursor.execute</code> 执行 SQL</li>
+<li><code>fetchone</code> 获取查询结果</li>
+</ul>
+<h3 id="3-Web-安全方面"><a href="#3-Web-安全方面" class="headerlink" title="3. Web 安全方面"></a>3. Web 安全方面</h3><ul>
+<li>SQL 注入成因</li>
+<li>字符串拼接 SQL 的风险</li>
+<li>注释符对 SQL 结构的影响</li>
+<li>参数化查询的防护作用</li>
+<li>安全版与不安全版对照实验方法</li>
+</ul>
+<hr>
+<h2 id="十二、最终结论"><a href="#十二、最终结论" class="headerlink" title="十二、最终结论"></a>十二、最终结论</h2><p>SQL 注入的根本原因，不是 MySQL 本身有问题，而是程序把用户输入直接拼接进 SQL 语句，导致用户输入有机会改变 SQL 的结构和逻辑。</p>
+<p>正确的防护方式是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">使用参数化查询或预编译语句，让 SQL 结构和用户输入彻底分离。<br></code></pre></td></tr></table></figure>
+
+<p>这次实验最重要的收获是，我不只是看到了 SQL 注入的效果，也通过安全版和不安全版的对照，理解了漏洞产生的原因和防护思路。</p>
+<p>对于学习 Web 安全来说，这种对照实验比单纯记概念更加直观。</p>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages" style="justify-content: flex-end"><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/04/21/mysql-basic-notes/">MySQL 基础操作学习笔记 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">与猫为邻</a></h1><div id="description"><p></p></div><div id="social-links"><a class="social" target="_blank" rel="noopener" href="https://github.com/YuMaoWeiLin"><i class="fab fa-github" alt="GitHub"></i></a></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL-%E6%B3%A8%E5%85%A5%E5%AE%9E%E9%AA%8C%E5%A4%8D%E7%9B%98%EF%BC%9A%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8B%BC%E6%8E%A5%E4%B8%8E%E5%8F%82%E6%95%B0%E5%8C%96%E6%9F%A5%E8%AF%A2%E5%AF%B9%E7%85%A7"><span class="toc-number">1.</span> <span class="toc-text">SQL 注入实验复盘：字符串拼接与参数化查询对照</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%AE%9E%E9%AA%8C%E7%9B%AE%E6%A0%87"><span class="toc-number">1.1.</span> <span class="toc-text">一、实验目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83"><span class="toc-number">1.2.</span> <span class="toc-text">二、实验环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E5%87%86%E5%A4%87"><span class="toc-number">1.3.</span> <span class="toc-text">三、数据库准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%AE%89%E5%85%A8%E7%89%88%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.4.</span> <span class="toc-text">四、安全版程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%B8%8D%E5%AE%89%E5%85%A8%E7%89%88%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.5.</span> <span class="toc-text">五、不安全版程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%AD%A3%E5%B8%B8%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95"><span class="toc-number">1.6.</span> <span class="toc-text">六、正常登录测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%B3%A8%E5%85%A5%E6%B5%8B%E8%AF%95"><span class="toc-number">1.7.</span> <span class="toc-text">七、注入测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E5%AE%89%E5%85%A8%E7%89%88%E5%AF%B9%E7%85%A7%E6%B5%8B%E8%AF%95"><span class="toc-number">1.8.</span> <span class="toc-text">八、安全版对照测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E6%A0%B8%E5%BF%83%E5%AF%B9%E6%AF%94"><span class="toc-number">1.9.</span> <span class="toc-text">九、核心对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E5%AE%9E%E9%AA%8C%E4%B8%AD%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.10.</span> <span class="toc-text">十、实验中解决的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Python-%E7%8E%AF%E5%A2%83%E9%97%AE%E9%A2%98"><span class="toc-number">1.10.1.</span> <span class="toc-text">1. Python 环境问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-vim-%E7%BC%96%E8%BE%91%E6%B7%B7%E4%B9%B1%E9%97%AE%E9%A2%98"><span class="toc-number">1.10.2.</span> <span class="toc-text">2. vim 编辑混乱问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Windows-%E6%B5%8F%E8%A7%88%E5%99%A8%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%AB%AF%E5%8F%A3"><span class="toc-number">1.10.3.</span> <span class="toc-text">3. Windows 浏览器无法访问虚拟机端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E6%B2%A1%E6%9C%89%E6%9D%83%E9%99%90%E8%BF%90%E8%A1%8C-root-%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6"><span class="toc-number">1.10.4.</span> <span class="toc-text">4. 普通用户没有权限运行 root 目录文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E8%BF%99%E6%AC%A1%E6%8E%8C%E6%8F%A1%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">1.11.</span> <span class="toc-text">十一、这次掌握的知识点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-MySQL-%E6%96%B9%E9%9D%A2"><span class="toc-number">1.11.1.</span> <span class="toc-text">1. MySQL 方面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Python-%E6%96%B9%E9%9D%A2"><span class="toc-number">1.11.2.</span> <span class="toc-text">2. Python 方面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Web-%E5%AE%89%E5%85%A8%E6%96%B9%E9%9D%A2"><span class="toc-number">1.11.3.</span> <span class="toc-text">3. Web 安全方面</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E6%9C%80%E7%BB%88%E7%BB%93%E8%AE%BA"><span class="toc-number">1.12.</span> <span class="toc-text">十二、最终结论</span></a></li></ol></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="/js/music-player.js"></script><script defer src="/js/waifu-interact.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"https://cdn.jsdelivr.net/npm/live2d-widget-model-haru@1.0.5/02/assets/haru02.model.json"},"display":{"position":"left","width":140,"height":280,"hOffset":10,"vOffset":-10},"mobile":{"show":false},"react":{"opacityDefault":0.9,"opacityOnHover":1}});</script></body></html>
