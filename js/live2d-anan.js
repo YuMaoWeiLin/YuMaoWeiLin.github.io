@@ -10,6 +10,7 @@
   var MOBILE_MEDIA = "(max-width: 768px), (hover: none) and (pointer: coarse)";
   var DIALOGUE_VISIBLE_MS = 3800;
   var HIDE_DIALOGUE_DELAY_MS = 1200;
+  var VISIBILITY_TRANSITION_MS = 260;
   var IDLE_MIN_MS = 45000;
   var IDLE_MAX_MS = 75000;
   var DIALOGUE_LINES = {
@@ -225,9 +226,61 @@
     });
   }
 
-  function setHidden(root, restore, hidden, dialogue) {
-    root.hidden = hidden;
-    restore.hidden = !hidden;
+  function clearVisibilityTimer(element) {
+    if (element._ananVisibilityTimer) {
+      window.clearTimeout(element._ananVisibilityTimer);
+      element._ananVisibilityTimer = 0;
+    }
+  }
+
+  function setElementVisible(element, visible, immediate) {
+    clearVisibilityTimer(element);
+
+    if (visible) {
+      element.hidden = false;
+      element.classList.add("is-hidden");
+
+      if (immediate) {
+        element.classList.remove("is-hidden");
+        element.classList.add("is-visible");
+        return;
+      }
+
+      element.classList.remove("is-visible");
+      element.offsetHeight;
+      window.requestAnimationFrame(function () {
+        element.classList.remove("is-hidden");
+        element.classList.add("is-visible");
+      });
+      return;
+    }
+
+    element.classList.remove("is-visible");
+    element.classList.add("is-hidden");
+
+    if (immediate) {
+      element.hidden = true;
+      return;
+    }
+
+    element._ananVisibilityTimer = window.setTimeout(function () {
+      element.hidden = true;
+      element._ananVisibilityTimer = 0;
+    }, VISIBILITY_TRANSITION_MS);
+  }
+
+  function setHidden(root, restore, hidden, dialogue, immediate) {
+    if (hidden) {
+      setElementVisible(restore, false, true);
+      setElementVisible(root, false, immediate);
+      window.setTimeout(function () {
+        setElementVisible(restore, true, immediate);
+      }, immediate ? 0 : VISIBILITY_TRANSITION_MS);
+    } else {
+      setElementVisible(restore, false, immediate);
+      setElementVisible(root, true, immediate);
+    }
+
     if (dialogue) {
       if (hidden) {
         dialogue.clearIdle();
@@ -382,6 +435,7 @@
 
     var root = document.createElement("div");
     root.id = "anan-live2d";
+    root.classList.add("is-hidden");
     var hideTimer = 0;
 
     var canvas = document.createElement("canvas");
@@ -395,6 +449,7 @@
     var dialogue = createDialogue(root);
 
     var restore = createButton("anan-live2d-restore", "Show", "Show Live2D");
+    restore.classList.add("is-hidden");
     restore.hidden = true;
 
     document.body.appendChild(root);
@@ -424,11 +479,17 @@
       dialogue.show(DIALOGUE_LINES.restore);
     });
 
+    var startHidden = false;
     try {
-      if (window.localStorage.getItem(STORAGE_KEY) === "1") {
-        setHidden(root, restore, true, dialogue);
-      }
+      startHidden = window.localStorage.getItem(STORAGE_KEY) === "1";
     } catch (e) {}
+
+    if (startHidden) {
+      setHidden(root, restore, true, dialogue, true);
+    } else {
+      setElementVisible(root, true, false);
+      setElementVisible(restore, false, true);
+    }
 
     var Live2DModel = await waitForRuntime();
     if (!window.PIXI || !Live2DModel) {

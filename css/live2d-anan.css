@@ -5,12 +5,23 @@
   width: 260px;
   height: 360px;
   z-index: 80;
+  opacity: 0;
   pointer-events: none;
+  transform: translateY(18px) scale(0.98);
+  transition: opacity 260ms ease, transform 260ms ease, visibility 0s linear 260ms;
+  visibility: hidden;
 }
 
 #anan-live2d[hidden],
 #anan-live2d-restore[hidden] {
   display: none !important;
+}
+
+#anan-live2d.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition-delay: 0s;
+  visibility: visible;
 }
 
 #anan-live2d-canvas {
@@ -96,8 +107,21 @@
   min-width: 54px;
   height: 32px;
   border-radius: 16px;
+  opacity: 0;
   padding: 0 12px;
+  pointer-events: none;
   font-size: 13px;
+  transform: translateY(8px);
+  transition: opacity 220ms ease, transform 220ms ease, visibility 0s linear 220ms;
+  visibility: hidden;
+}
+
+#anan-live2d-restore.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition-delay: 0s;
+  visibility: visible;
 }
 
 #anan-live2d-error {
