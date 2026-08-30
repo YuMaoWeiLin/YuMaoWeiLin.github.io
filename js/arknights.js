@@ -1134,6 +1134,11 @@ class MonacoEditor {
         });
         this.updateEditorLayout();
     };
+    // monaco loader 会定义全局 AMD define,劫持后续 UMD 库(pjax/lightgallery)的注册,
+    // 因此仅在页面确实存在编辑器元素时才注入,避免无编辑器页面被污染
+    loadMonacoIfEditors = () => {
+        if (document.querySelector('.monaco-editor-code')) this.loadMonaco();
+    };
     loadMonaco = () => {
         if (typeof window.hexo_monaco === 'undefined') {
             const loader = document.createElement('script');
@@ -1155,9 +1160,9 @@ class MonacoEditor {
         }
     };
     constructor() {
-        this.loadMonaco();
-        document.addEventListener('pjax:success', this.loadMonaco);
-        window.addEventListener('hexo-blog-decrypt', this.loadMonaco);
+        this.loadMonacoIfEditors();
+        document.addEventListener('pjax:success', this.loadMonacoIfEditors);
+        window.addEventListener('hexo-blog-decrypt', this.loadMonacoIfEditors);
         window.addEventListener('resize', this.updateEditorLayout);
     }
 }

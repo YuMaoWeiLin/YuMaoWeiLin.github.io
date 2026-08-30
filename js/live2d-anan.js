@@ -8,6 +8,11 @@
   var MIN_RENDER_RESOLUTION = 2;
   var MAX_RENDER_RESOLUTION = 3;
   var MOBILE_MEDIA = "(max-width: 768px), (hover: none) and (pointer: coarse)";
+  var VENDOR_SCRIPTS = [
+    "/js/vendor/live2d/live2dcubismcore.min.js?v=20260509c",
+    "/js/vendor/live2d/pixi.min.js?v=20260509c",
+    "/js/vendor/live2d/pixi-live2d-display.min.js?v=20260509c"
+  ];
   var DIALOGUE_VISIBLE_MS = 3800;
   var HIDE_DIALOGUE_DELAY_MS = 1200;
   var VISIBILITY_TRANSITION_MS = 260;
@@ -210,6 +215,16 @@
   function getRenderResolution() {
     var ratio = window.devicePixelRatio || 1;
     return Math.min(Math.max(ratio, MIN_RENDER_RESOLUTION), MAX_RENDER_RESOLUTION);
+  }
+
+  // 动态插入的 classic script 默认 async,必须显式关闭才能保证三个库按序执行
+  function loadVendorScripts() {
+    VENDOR_SCRIPTS.forEach(function (src) {
+      var script = document.createElement("script");
+      script.src = src;
+      script.async = false;
+      document.head.appendChild(script);
+    });
   }
 
   function waitForRuntime() {
@@ -491,6 +506,7 @@
       setElementVisible(restore, false, true);
     }
 
+    loadVendorScripts();
     var Live2DModel = await waitForRuntime();
     if (!window.PIXI || !Live2DModel) {
       showError(root, "Live2D runtime failed to load.");
